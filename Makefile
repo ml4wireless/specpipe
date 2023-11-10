@@ -2,12 +2,20 @@
 GOCMD=go
 GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
+GOINSTALL=$(GOCMD) install
 
-all: build-server build-edge
+build: build-server build-edge
 build-server:
 	$(GOBUILD) -ldflags="-X main.Version=v0.3.2 -w -s" -o sp-server ./cmd/server
 build-edge:
 	$(GOBUILD) -ldflags="-X main.Version=v0.3.2 -w -s" -o sp-edge ./cmd/edge
+
+codegen: codegen-install
+	swagger-codegen generate -l openapi-yaml -i server/openapi/main.yaml -t server/openapi -DoutputFile=merge.yaml
+	$(shell $(GOCMD) env GOPATH)/bin/oapi-codegen -package server -generate "types,gin,spec" merge.yaml > server/server.gen.go
+	rm -rf merge.yaml .swagger-codegen/
+codegen-install:
+	$(GOINSTALL) github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.0.0
 
 docker: docker-server docker-edge
 docker-server:

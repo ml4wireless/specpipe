@@ -9,6 +9,8 @@ path:
             application/json:
               schema:
                 $ref: "#/components/schemas/devices_response"
+        '500':
+          $ref: status_code.yaml#/code/500
       tags:
         - device
   devices_deviceid:
@@ -30,6 +32,8 @@ path:
                 $ref: "#/components/schemas/device_response"
         '404':
           $ref: status_code.yaml#/code/404
+        '500':
+           $ref: status_code.yaml#/code/500
       tags:
         - device
 
@@ -57,6 +61,8 @@ path:
                 $ref: "#/components/schemas/device_response"
         '404':
           $ref: status_code.yaml#/code/404
+        '500':
+          $ref: status_code.yaml#/code/500
       tags:
         - device
 
