@@ -1,1 +1,0 @@
-# SpecPipe - Distributed Data Pipeline for Spectrum
