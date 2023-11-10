@@ -13,7 +13,7 @@ build-edge:
 codegen: codegen-install
 	swagger-codegen generate -l openapi-yaml -i server/openapi/main.yaml -t server/openapi -DoutputFile=merge.yaml
 	$(shell $(GOCMD) env GOPATH)/bin/oapi-codegen -package server -generate "types,gin,spec" merge.yaml > server/server.gen.go
-	rm -rf merge.yaml .swagger-codegen*
+	rm -rf merge.yaml .swagger-codegen/
 codegen-install:
 	$(GOINSTALL) github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.0.0
 
