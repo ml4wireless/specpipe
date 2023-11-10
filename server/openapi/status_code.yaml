@@ -1,0 +1,44 @@
+code:
+  '204':
+    description: No Content
+
+  '401':
+    description: Authentication Failure
+
+  '400':
+    description: Bad Requests
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/error_response"
+
+  '404':
+    description: Not Found
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/error_response"
+
+  '409':
+    description: Conflict
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/error_response"
+
+  '500':
+    description: Internal Server Error
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/error_response"
+
+components:
+  schemas:
+    error_response:
+      additionalProperties: false
+      properties:
+        detail:
+          type: string
+        title:
+          type: string
