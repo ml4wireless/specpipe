@@ -1,0 +1,12 @@
+openapi: 3.0.0
+info:
+  title: SpecPipe Server API
+  version: 0.3.2
+servers:
+  - url: /v0
+
+paths:
+  /devices/{deviceid}:
+    $ref: devices.yaml#/path/devices_deviceid
+  /devices:
+    $ref: devices.yaml#/path/devices

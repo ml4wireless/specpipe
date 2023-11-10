@@ -1,0 +1,99 @@
+path:
+  devices:
+    get:
+      summary: List devices
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devices_response"
+      tags:
+        - device
+  devices_deviceid:
+    get:
+      summary: Read device configuration
+      parameters:
+        - in: path
+          name: deviceid
+          description: deviceid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/device_response"
+        '404':
+          $ref: status_code.yaml#/code/404
+      tags:
+        - device
+
+    put:
+      summary: Update device
+      parameters:
+        - in: path
+          name: deviceid
+          description: deviceid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/update_device_request"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/device_response"
+        '404':
+          $ref: status_code.yml#/code/404
+      tags:
+        - device
+
+components:
+  schemas:
+    device:
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        sample_rate:
+          type: string
+        freq:
+          type: string
+        longitude:
+          type: number
+          format: float
+        latitude:
+          type: number
+          format: float
+
+    device_response:
+      additionalProperties: false
+      properties:
+        device:
+          $ref: "#/components/schemas/device"
+
+    devices_response:
+      additionalProperties: false
+      properties:
+        devices:
+          type: array
+          items:
+            $ref: "#/components/schemas/device"
+
+    update_device_request:
+      additionalProperties: false
+      properties:
+        freq:
+          type: string
