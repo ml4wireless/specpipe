@@ -56,7 +56,7 @@ path:
               schema:
                 $ref: "#/components/schemas/device_response"
         '404':
-          $ref: status_code.yml#/code/404
+          $ref: status_code.yaml#/code/404
       tags:
         - device
 
