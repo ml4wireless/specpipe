@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
@@ -17,9 +16,9 @@ var (
 
 var rootCmd = &cobra.Command{
 	Use:   "sp-server",
-	Short: "specpipe server executable",
+	Short: "specpipe server",
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Println("hello")
+		cmd.Help()
 	},
 }
 
