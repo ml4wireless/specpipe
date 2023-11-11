@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
@@ -16,10 +15,10 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "edge",
-	Short: "specpipe edge client executable",
+	Use:   "sp-edge",
+	Short: "specpipe edge client",
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Println("hello")
+		cmd.Help()
 	},
 }
 
