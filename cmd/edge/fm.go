@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"os"
 	"os/signal"
 	"syscall"
@@ -30,19 +31,42 @@ var fmCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		clusterConn, err := common.NewNATSConn(config.Pub.NatsUrl)
+		if err != nil {
+			log.Fatal(err)
+		}
+		deviceInfo := common.FMDevice{
+			Name:       config.Device.Name,
+			Freq:       config.Rtlsdr.Fm.Freq,
+			SampleRate: config.Rtlsdr.Fm.SampleRate,
+			Latitude:   config.Device.Latitude,
+			Longitude:  config.Device.Longitude,
+		}
+		deviceInfoBytes, err := json.Marshal(deviceInfo)
+		if err != nil {
+			log.Fatal(err)
+		}
+		sub, err := edge.RegisterDevice(clusterConn, common.FM, config.Device.Name, deviceInfoBytes)
+		if err != nil {
+			log.Fatal(err)
+		}
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
 		sig := make(chan os.Signal, 1)
 		signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 
-		log.Infof("start specpipe edge FM name=%s freq=%s", config.Device.Name, config.Rtlsdr.Fm.Freq)
+		log.Infof("start specpipe edge FM name=%s freq=%s pub-subject=%s", config.Device.Name, config.Rtlsdr.Fm.Freq, config.Pub.Subject)
 		done := make(chan bool, 1)
 		go func() {
 			if err := edge.CaptureAudio(ctx, config, publisher, logger); err != nil {
 				log.Fatal(err)
 			}
 			logger.Info("audio capture stopped")
+			if err = edge.DeregisterDevice(clusterConn, common.FM, config.Device.Name, sub); err != nil {
+				log.Fatal(err)
+			}
+			logger.Info("device deregistered")
 			done <- true
 		}()
 		<-sig
@@ -58,11 +82,11 @@ func init() {
 	fmCmd.Flags().StringP("device-name", "", "", "device name")
 	viper.BindPFlag("device.name", fmCmd.Flags().Lookup("device-name"))
 
-	fmCmd.Flags().StringP("device-longitude", "", "", "device longitude")
-	viper.BindPFlag("device.longitude", fmCmd.Flags().Lookup("device-longitude"))
-
 	fmCmd.Flags().StringP("device-latitude", "", "", "device latitude")
 	viper.BindPFlag("device.latitude", fmCmd.Flags().Lookup("device-latitude"))
+
+	fmCmd.Flags().StringP("device-longitude", "", "", "device longitude")
+	viper.BindPFlag("device.longitude", fmCmd.Flags().Lookup("device-longitude"))
 
 	fmCmd.Flags().StringP("freq", "", "", "frequency")
 	viper.BindPFlag("rtlsdr.fm.freq", fmCmd.Flags().Lookup("freq"))

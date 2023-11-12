@@ -1,0 +1,19 @@
+version: '3'
+services:
+  nats-box:
+    image: natsio/nats-box:0.14.0
+    command: >
+      /bin/sh -c "
+      nats -s nats://mytoken@nats:4222 str add "specpipe" --subjects="specpipe.data.*.*,specpipe.cluster.*.*.*" --ack --max-msgs=-1 --max-msgs-per-subject=-1 --max-bytes=-1 --max-age=1y --storage=file --retention=limits --max-msg-size=1048576 --discard=old --replicas=1 --dupe-window="0s" --no-allow-rollup --no-deny-delete --no-deny-purge;
+      nats -s nats://mytoken@nats:4222 str info "specpipe" -j; # output to json
+      exit 0;
+      "
+  nats:
+    image: nats:2.9.22
+    ports:
+      - "4222:4222"
+    restart: always
+    command:
+      - -auth
+      - mytoken
+      - -js

@@ -9,7 +9,9 @@ import (
 	nc "github.com/nats-io/nats.go"
 )
 
-var TimestampHeader string = "ts"
+var (
+	TimestampHeader string = "ts"
+)
 
 func NewNatsPublisher(natsUrl string) (message.Publisher, error) {
 	marshaler := &nats.NATSMarshaler{}
@@ -32,4 +34,13 @@ func NewNatsPublisher(natsUrl string) (message.Publisher, error) {
 		},
 		logger,
 	)
+}
+
+func NewNATSConn(natsUrl string) (*nc.Conn, error) {
+	options := []nc.Option{
+		nc.RetryOnFailedConnect(true),
+		nc.Timeout(3 * time.Second),
+		nc.ReconnectWait(1 * time.Second),
+	}
+	return nc.Connect(natsUrl, options...)
 }
