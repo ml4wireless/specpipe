@@ -9,6 +9,8 @@ import (
 	nc "github.com/nats-io/nats.go"
 )
 
+var TimestampHeader string = "ts"
+
 func NewNatsPublisher(natsUrl string) (message.Publisher, error) {
 	marshaler := &nats.NATSMarshaler{}
 	logger := watermill.NewStdLogger(false, false)
