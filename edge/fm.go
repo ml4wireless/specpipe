@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/ml4wireless/specpipe/common"
 )
@@ -16,6 +17,7 @@ var (
 	ErrEmptyFreq        = errors.New("frequency cannot be empty")
 	ErrEmptySampleRate  = errors.New("samping rate cannot be empty")
 	ErrEmptyReampleRate = errors.New("resamping rate cannot be empty")
+	ErrEOF              = errors.New("read EOF from rtl_fm")
 )
 
 func CaptureAudio(ctx context.Context, config *Config, publisher message.Publisher, logger common.EdgeLogrus) error {
@@ -56,7 +58,7 @@ func CaptureAudio(ctx context.Context, config *Config, publisher message.Publish
 			bytesRead, err := stdout.Read(audio[n:])
 			if err != nil {
 				if err == io.EOF {
-					break
+					return ErrEOF
 				}
 				logger.Error(err)
 			}
@@ -82,7 +84,8 @@ func CaptureAudio(ctx context.Context, config *Config, publisher message.Publish
 		}
 		payload := make([]byte, 2*8192)
 		copy(payload, audio)
-		msg := message.NewMessage(strconv.FormatInt(time.Now().UTC().Unix(), 10), payload)
+		msg := message.NewMessage(watermill.NewShortUUID(), payload)
+		msg.Metadata.Set(common.TimestampHeader, strconv.FormatInt(time.Now().UTC().Unix(), 10))
 		if err := publisher.Publish(config.Pub.Subject, msg); err != nil {
 			logger.Error(err)
 		}
