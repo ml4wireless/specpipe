@@ -10,7 +10,7 @@ Key Features:
 - Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
 - Transparent - server tracks edge node status, performs health checks, and exposes REST APIs for node management.
 - Fault Tolerant - automatic reconnections and timeouts between edge and cloud.
-- Horizontally Scalable - Orchestrate many edge devices seamlessly out-of-the-box.
+- Horizontally Scalable - orchestrate many edge devices seamlessly out-of-the-box.
 ## Getting Started
 ### Install Dependencies
 In order to extract IQ data from the SDR hardware, the `librtlsdr` binaries have to be installed on the host machine.
