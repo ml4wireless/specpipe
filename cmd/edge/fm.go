@@ -29,6 +29,7 @@ var fmCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		defer publisher.Close()
 		logger, err := common.NewEdgeLogrus(config.Logging.Level)
 		if err != nil {
 			log.Fatal(err)
@@ -68,28 +69,53 @@ var fmCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		defer heartbeatSub.Unsubscribe()
 
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
+		watchSub, fmDeviceConfigChan, err := edge.WatchFmDeviceConfig(ctx, clusterConn, kv, config.Device.Name, logger)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer watchSub.Unsubscribe()
+
 		sig := make(chan os.Signal, 1)
 		signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 
-		log.Infof("start specpipe edge FM name=%s freq=%s nats-subject=%s", config.Device.Name, config.Rtlsdr.Fm.Freq, config.Nats.Subject)
 		done := make(chan bool, 1)
 		go func() {
-			if err := edge.CaptureAudio(ctx, config, publisher, logger); err != nil {
-				log.Fatal(err)
+			subCtx, subCancel := context.WithCancel(ctx)
+
+			for {
+				select {
+				case <-ctx.Done():
+					subCancel()
+					deregCtx, deregCancel := context.WithTimeout(context.Background(), 5*time.Second)
+					defer deregCancel()
+					if err = edge.DeregisterDevice(deregCtx, kv, common.FM, config.Device.Name); err != nil {
+						log.Fatal(err)
+					}
+					logger.Info("device deregistered")
+					done <- true
+					return
+				case newFmDevice := <-fmDeviceConfigChan:
+					subCancel()
+					config.Rtlsdr.Fm.Freq = newFmDevice.Freq
+					logger.Infof("device %s tuned to frequency: %s", config.Device.Name, config.Rtlsdr.Fm.Freq)
+					subCtx, subCancel = context.WithCancel(ctx)
+					go func() {
+						if err := edge.CaptureAudio(subCtx, config, publisher, logger); err != nil {
+							log.Fatal(err)
+						}
+					}()
+				}
 			}
-			logger.Info("audio capture stopped")
-			deregCtx, deregCancel := context.WithTimeout(context.Background(), 5*time.Second)
-			defer deregCancel()
-			if err = edge.DeregisterDevice(deregCtx, kv, common.FM, config.Device.Name, heartbeatSub); err != nil {
-				log.Fatal(err)
-			}
-			logger.Info("device deregistered")
-			done <- true
 		}()
+
+		log.Infof("start specpipe edge FM name=%s nats-subject=%s", config.Device.Name, config.Nats.Subject)
+		fmDeviceConfigChan <- deviceInfo
+
 		<-sig
 		cancel()
 

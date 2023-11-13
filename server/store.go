@@ -4,17 +4,20 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"time"
 
 	"github.com/ml4wireless/specpipe/common"
+	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 )
 
 type Store struct {
-	kv jetstream.KeyValue
+	conn *nats.Conn
+	kv   jetstream.KeyValue
 }
 
-func NewStore(kv jetstream.KeyValue) *Store {
-	return &Store{kv}
+func NewStore(conn *nats.Conn, kv jetstream.KeyValue) *Store {
+	return &Store{conn, kv}
 }
 
 func (s *Store) GetFmDevice(ctx context.Context, deviceName string) (bool, *common.FMDevice, error) {
@@ -55,7 +58,10 @@ func (s *Store) UpdateFmDevice(ctx context.Context, fmDevice *common.FMDevice) e
 	if err != nil {
 		return err
 	}
-	_, err = s.kv.Put(ctx, common.KVStoreKey(common.FM, fmDevice.Name), deviceInfoBytes)
+	if _, err = s.kv.Put(ctx, common.KVStoreKey(common.FM, fmDevice.Name), deviceInfoBytes); err != nil {
+		return err
+	}
+	_, err = s.conn.Request(common.ClusterSubject(common.FM, fmDevice.Name, common.WatchConfigCmd), nil, 3*time.Second)
 	return err
 }
 

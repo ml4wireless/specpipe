@@ -19,9 +19,6 @@ func RegisterDevice(ctx context.Context, conn *nats.Conn, kv jetstream.KeyValue,
 	})
 }
 
-func DeregisterDevice(ctx context.Context, kv jetstream.KeyValue, sdrType common.SDRType, deviceName string, sub *nats.Subscription) error {
-	if err := kv.Delete(ctx, common.KVStoreKey(sdrType, deviceName)); err != nil {
-		return err
-	}
-	return sub.Unsubscribe()
+func DeregisterDevice(ctx context.Context, kv jetstream.KeyValue, sdrType common.SDRType, deviceName string) error {
+	return kv.Delete(ctx, common.KVStoreKey(sdrType, deviceName))
 }

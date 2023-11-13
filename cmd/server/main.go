@@ -65,7 +65,7 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		store := server.NewStore(kv)
+		store := server.NewStore(clusterConn, kv)
 		svr := server.NewSpecpipeServer(store)
 		httpSvr := server.NewHttpServer(svr, logger, config.Http.ServerPort)
 

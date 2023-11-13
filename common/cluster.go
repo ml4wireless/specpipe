@@ -18,6 +18,7 @@ type ClusterCmd string
 
 const (
 	HealthCheckCmd ClusterCmd = "health"
+	WatchConfigCmd ClusterCmd = "watchcfg"
 )
 
 type SDRType string

@@ -2,6 +2,7 @@ package edge
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"io"
 	"os/exec"
@@ -11,6 +12,8 @@ import (
 	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/ml4wireless/specpipe/common"
+	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
 )
 
 var (
@@ -43,14 +46,11 @@ func CaptureAudio(ctx context.Context, config *Config, publisher message.Publish
 		if err = cmd.Process.Kill(); err != nil {
 			return err
 		}
-		if err = publisher.Close(); err != nil {
-			return err
-		}
 		return nil
 	}
 
 	audio := make([]byte, 2*8192)
-	logger.Info("start caputuring FM audio")
+	logger.Info("start FM audio capturer")
 	for {
 		n, err := stdout.Read(audio)
 		if err != nil {
@@ -95,4 +95,29 @@ CLEANUP:
 		return err
 	}
 	return nil
+}
+
+func WatchFmDeviceConfig(ctx context.Context, conn *nats.Conn, kv jetstream.KeyValue, deviceName string, logger common.EdgeLogrus) (*nats.Subscription, chan common.FMDevice, error) {
+	fmDeviceConfigChan := make(chan common.FMDevice)
+	watchSub, err := conn.Subscribe(common.ClusterSubject(common.FM, deviceName, common.WatchConfigCmd), func(msg *nats.Msg) {
+		entry, err := kv.Get(ctx, common.KVStoreKey(common.FM, deviceName))
+		if err != nil {
+			logger.Error(err)
+		}
+
+		var device common.FMDevice
+		if err = json.Unmarshal(entry.Value(), &device); err != nil {
+			logger.Error(err)
+		}
+
+		fmDeviceConfigChan <- device
+
+		msg.Respond([]byte(common.OkMsg))
+	})
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return watchSub, fmDeviceConfigChan, nil
 }
