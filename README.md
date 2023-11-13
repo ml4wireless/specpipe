@@ -1,5 +1,17 @@
 # SpecPipe - Distributed Data Pipeline for Spectrum
-## Install Dependencies
+SpecPipe leverages software-defined radios (SDRs) and open-source tools like librtlsdr, rtl_fm, and rtl_power to capture, process, and analyze radio spectrum data at the edge. It consists of two components - `sp-edge` and `sp-server`.
+
+`sp-edge` runs on edge devices, managing SDR hardware to capture radio spectrum data. It processes the data and streams it to the cloud `sp-server` component.
+
+`sp-server` provides a control plane in the cloud, enabling management and monitoring of edge devices and their captured data streams.
+
+Key Features:
+- Portable - Decouples system dependencies from application, packaging everything into a single container for easy edge deployment.
+- Intuitive - User-friendly CLI with robust configuration options via file, CLI args, or environment variables.
+- Transparent - Server tracks edge node status, performs health checks, and exposes REST APIs for node management.
+- Fault Tolerant - Automatic reconnections and timeouts between edge and cloud.
+## Getting Started
+### Install Dependencies
 In order to extract IQ data from the SDR hardware, the `librtlsdr` binaries have to be installed on the host machine.
 
 First, have `gcc`, `g++`, and `make` installed. 
@@ -28,7 +40,7 @@ After building and installing librtlsdr, the files are located in the following 
 - Header files are installed to `/usr/local/include`
 - Library files are installed to `/usr/local/lib`
 - Executable binaries are installed to `/usr/local/bin`
-### For Mac Users (Apple Chips)
+#### For Mac Users (Apple Chips)
 Install  `cmake` and `libusb` via Homebrew.
 ```bash
 brew install cmake libusb
@@ -53,11 +65,11 @@ mkdir build && cd build
 cmake -DCMAKE_HOST_SYSTEM_PROCESSOR:STRING=arm64 -DLIBUSB_INCLUDE_DIR=/usr/local/Cellar/libusb/1.0.26/include/libusb-1.0 -DLIBUSB_LIBRARY=/usr/local/lib/libusb-1.0.dylib ../
 sudo make && sudo make install
 ```
-## Build Docker Image
+### Build Docker Image
 ```bash
 make docker
 ```
-## Getting Started
+### Deployment
 Start a `rtl_rpcd` daemon on the host machine, which allows remote access of SDR hardware at `127.0.0.1:40000` via `librtlsdr` command-line tools.
 
 ```bash
@@ -87,7 +99,7 @@ docker run --rm -p 80:8888 -d minghsu0107/specpipe-server \
     --http-server-port=8888 \
     --nats-url=nats://mytoken@host.docker.internal:4222
 ```
-
+### Cloud APIs
 View configurations of all registered FM devices.
 ```bash
 curl http://localhost/v0/fm/devices
