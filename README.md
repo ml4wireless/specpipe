@@ -3,13 +3,14 @@ SpecPipe leverages software-defined radios (SDRs) and open-source tools like lib
 
 `sp-edge` runs on edge devices, managing SDR hardware to capture radio spectrum data. It processes the data and streams it to the cloud `sp-server` component.
 
-`sp-server` provides a control plane in the cloud, enabling management and monitoring of edge devices and their captured data streams.
+`sp-server` provides a control plane in the cloud, enabling management and monitoring of edge devices and their captured data streams. It is horizontally scalable, allowing easy orchestration of many edge devices out-of-the-box.
 
 Key Features:
 - Lightweight and portable - decouples system dependencies from application, packaging everything into a single container for easy edge deployment.
 - Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
 - Transparent - server tracks edge node status, performs health checks, and exposes REST APIs for node management.
 - Fault Tolerant - automatic reconnections and timeouts between edge and cloud.
+- Horizontally Scalable - Orchestrate many edge devices seamlessly out-of-the-box.
 ## Getting Started
 ### Install Dependencies
 In order to extract IQ data from the SDR hardware, the `librtlsdr` binaries have to be installed on the host machine.
