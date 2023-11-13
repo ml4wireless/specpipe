@@ -119,3 +119,5 @@ components:
       properties:
         freq:
           type: string
+        sample_rate:
+          type: string

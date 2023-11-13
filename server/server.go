@@ -74,6 +74,9 @@ func (s *SpecpipeServer) PutFmDevicesDevicename(c *gin.Context, deviceName strin
 	}
 
 	fmDevice.Freq = updateFmDeviceRequest.Freq
+	if updateFmDeviceRequest.SampleRate != nil {
+		fmDevice.SampleRate = *updateFmDeviceRequest.SampleRate
+	}
 	if err = s.store.UpdateFmDevice(c.Request.Context(), fmDevice); err != nil {
 		errorHandler(c, fmt.Errorf("update fm device error: %w", err), http.StatusInternalServerError)
 		return
