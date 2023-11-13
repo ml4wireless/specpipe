@@ -23,15 +23,20 @@ func Healthcheck(ctx context.Context, conn *nats.Conn, store *Store, heartbeatTi
 }
 
 func checkFmDevices(ctx context.Context, t time.Time, conn *nats.Conn, store *Store, heartbeatTimoutSec int64, logger common.ServerLogrus) {
-	fmDevices, err := store.GetFmDevices(ctx)
+	devices, err := store.GetDevices(ctx, common.FM)
 	if err != nil {
 		return
 	}
-	for _, fmDevice := range fmDevices {
+	for _, device := range devices {
+		fmDevice, ok := device.(*common.FMDevice)
+		if !ok {
+			logger.Error(fmt.Errorf("casting fm device type error: %w", err))
+			continue
+		}
 		_, err := conn.Request(common.ClusterSubject(common.FM, fmDevice.Name, common.HealthCheckCmd), nil, time.Duration(heartbeatTimoutSec)*time.Second)
 		if err != nil {
 			logger.Error(fmt.Errorf("send heartbeat request to device %s error: %w", fmDevice.Name, err))
-			if err = store.DeleteFmDevice(ctx, fmDevice.Name); err != nil {
+			if err = store.DeleteDevice(ctx, common.FM, fmDevice.Name); err != nil {
 				logger.Error(fmt.Errorf("remove device %s error: %w", fmDevice.Name, err))
 				continue
 			}

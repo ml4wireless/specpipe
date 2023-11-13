@@ -18,13 +18,18 @@ func NewSpecpipeServer(store *Store) *SpecpipeServer {
 }
 
 func (s *SpecpipeServer) GetFmDevices(c *gin.Context) {
-	fmDevices, err := s.store.GetFmDevices(c.Request.Context())
+	devices, err := s.store.GetDevices(c.Request.Context(), common.FM)
 	if err != nil {
 		errorHandler(c, fmt.Errorf("get fm devices error: %w", err), http.StatusInternalServerError)
 		return
 	}
 	fmDevicesPresenter := []FmDevice{}
-	for _, fmDevice := range fmDevices {
+	for _, device := range devices {
+		fmDevice, ok := device.(*common.FMDevice)
+		if !ok {
+			errorHandler(c, fmt.Errorf("casting fm device type error: %w", err), http.StatusInternalServerError)
+			return
+		}
 		fmDevicesPresenter = append(fmDevicesPresenter, FmDevice{
 			Freq:       fmDevice.Freq,
 			Latitude:   fmDevice.Latitude,
@@ -38,13 +43,18 @@ func (s *SpecpipeServer) GetFmDevices(c *gin.Context) {
 	})
 }
 func (s *SpecpipeServer) GetFmDevicesDevicename(c *gin.Context, deviceName string) {
-	exist, fmDevice, err := s.store.GetFmDevice(c.Request.Context(), deviceName)
+	exist, device, err := s.store.GetDevice(c.Request.Context(), common.FM, deviceName)
 	if err != nil {
 		errorHandler(c, fmt.Errorf("get fm device error: %w", err), http.StatusInternalServerError)
 		return
 	}
 	if !exist {
 		errorHandler(c, fmt.Errorf("fm device %s not found", deviceName), http.StatusNotFound)
+		return
+	}
+	fmDevice, ok := device.(*common.FMDevice)
+	if !ok {
+		errorHandler(c, fmt.Errorf("casting fm device type error: %w", err), http.StatusInternalServerError)
 		return
 	}
 	c.JSON(http.StatusOK, &FmDeviceResponse{
@@ -63,7 +73,7 @@ func (s *SpecpipeServer) PutFmDevicesDevicename(c *gin.Context, deviceName strin
 		errorHandler(c, fmt.Errorf("parse request error: %w", err), http.StatusBadRequest)
 		return
 	}
-	exist, fmDevice, err := s.store.GetFmDevice(c.Request.Context(), deviceName)
+	exist, device, err := s.store.GetDevice(c.Request.Context(), common.FM, deviceName)
 	if err != nil {
 		errorHandler(c, fmt.Errorf("get fm device error: %w", err), http.StatusInternalServerError)
 		return
@@ -72,12 +82,17 @@ func (s *SpecpipeServer) PutFmDevicesDevicename(c *gin.Context, deviceName strin
 		errorHandler(c, fmt.Errorf("fm device %s not found", deviceName), http.StatusNotFound)
 		return
 	}
+	fmDevice, ok := device.(*common.FMDevice)
+	if !ok {
+		errorHandler(c, fmt.Errorf("casting fm device type error: %w", err), http.StatusInternalServerError)
+		return
+	}
 
 	fmDevice.Freq = updateFmDeviceRequest.Freq
 	if updateFmDeviceRequest.SampleRate != nil {
 		fmDevice.SampleRate = *updateFmDeviceRequest.SampleRate
 	}
-	if err = s.store.UpdateFmDevice(c.Request.Context(), fmDevice); err != nil {
+	if err = s.store.UpdateDevice(c.Request.Context(), common.FM, deviceName, fmDevice); err != nil {
 		errorHandler(c, fmt.Errorf("update fm device error: %w", err), http.StatusInternalServerError)
 		return
 	}
