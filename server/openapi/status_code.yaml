@@ -37,6 +37,9 @@ components:
   schemas:
     error_response:
       additionalProperties: false
+      required:
+        - detail
+        - title
       properties:
         detail:
           type: string

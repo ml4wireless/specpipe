@@ -9,7 +9,7 @@ import (
 type Config struct {
 	Device  *DeviceConfig  `mapstructure:"device"`
 	Rtlsdr  *RtlsdrConfig  `mapstructure:"rtlsdr"`
-	Pub     *PublishConfig `mapstructure:"pub"`
+	Nats    *NatsConfig    `mapstructure:"nats"`
 	Logging *LoggingConfig `mapstructure:"logging"`
 }
 
@@ -29,8 +29,8 @@ type RtlsdrConfig struct {
 	RpcServerPort string
 }
 
-type PublishConfig struct {
-	NatsUrl string
+type NatsConfig struct {
+	Url     string
 	Subject string
 }
 
@@ -47,7 +47,7 @@ func setDefault() {
 	viper.SetDefault("rtlsdr.fm.resampleRate", "32k")
 	viper.SetDefault("rtlsdr.rpcServerAddr", "127.0.0.1")
 	viper.SetDefault("rtlsdr.rpcServerPort", "40000")
-	viper.SetDefault("pub.natsUrl", "nats://127.0.0.1:4222")
+	viper.SetDefault("nats.url", "nats://127.0.0.1:4222")
 	viper.SetDefault("logging.level", "info")
 }
 
@@ -58,6 +58,6 @@ func NewConfig() (*Config, error) {
 	if err := viper.Unmarshal(&c); err != nil {
 		return nil, err
 	}
-	c.Pub.Subject = common.DataSubject(common.FM, c.Device.Name)
+	c.Nats.Subject = common.DataSubject(common.FM, c.Device.Name)
 	return &c, nil
 }

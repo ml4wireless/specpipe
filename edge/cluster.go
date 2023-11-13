@@ -1,25 +1,27 @@
 package edge
 
 import (
+	"context"
+
 	"github.com/ml4wireless/specpipe/common"
 	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
 )
 
-func RegisterDevice(conn *nats.Conn, sdrType common.SDRType, deviceName string, deviceInfo []byte) (*nats.Subscription, error) {
-	// _, err := conn.Request(common.ClusterSubject(sdrType, deviceName, common.RegisterCmd), deviceInfo, time.Second)
-	// if err != nil {
-	// 	return nil, err
-	// }
+func RegisterDevice(ctx context.Context, conn *nats.Conn, kv jetstream.KeyValue, sdrType common.SDRType, deviceName string, deviceInfo []byte) (*nats.Subscription, error) {
+	_, err := kv.Put(ctx, common.KVStoreKey(sdrType, deviceName), deviceInfo)
+	if err != nil {
+		return nil, err
+	}
 	// healthcheck routine
 	return conn.Subscribe(common.ClusterSubject(sdrType, deviceName, common.HealthCheckCmd), func(msg *nats.Msg) {
-		msg.Respond([]byte("ok"))
+		msg.Respond([]byte(common.OkMsg))
 	})
 }
 
-func DeregisterDevice(conn *nats.Conn, sdrType common.SDRType, deviceName string, sub *nats.Subscription) error {
-	// _, err := conn.Request(common.ClusterSubject(sdrType, deviceName, common.DeregisterCmd), nil, time.Second)
-	// if err != nil {
-	// 	return err
-	// }
+func DeregisterDevice(ctx context.Context, kv jetstream.KeyValue, sdrType common.SDRType, deviceName string, sub *nats.Subscription) error {
+	if err := kv.Delete(ctx, common.KVStoreKey(sdrType, deviceName)); err != nil {
+		return err
+	}
 	return sub.Unsubscribe()
 }

@@ -1,25 +1,25 @@
 path:
-  devices:
+  fm_devices:
     get:
-      summary: List devices
+      summary: List FM devices
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/devices_response"
+                $ref: "#/components/schemas/fm_devices_response"
         '500':
           $ref: status_code.yaml#/code/500
       tags:
         - device
-  devices_deviceid:
+  fm_devices_devicename:
     get:
-      summary: Read device configuration
+      summary: Read FM device configuration
       parameters:
         - in: path
-          name: deviceid
-          description: deviceid
+          name: devicename
+          description: device name
           required: true
           schema:
             type: string
@@ -29,7 +29,9 @@ path:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/device_response"
+                $ref: "#/components/schemas/fm_device_response"
+        '400':
+          $ref: status_code.yaml#/code/400
         '404':
           $ref: status_code.yaml#/code/404
         '500':
@@ -38,11 +40,11 @@ path:
         - device
 
     put:
-      summary: Update device
+      summary: Update FM device
       parameters:
         - in: path
-          name: deviceid
-          description: deviceid
+          name: devicename
+          description: device name
           required: true
           schema:
             type: string
@@ -51,14 +53,16 @@ path:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/update_device_request"
+              $ref: "#/components/schemas/update_fm_device_request"
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/device_response"
+                $ref: "#/components/schemas/fm_device_response"
+        '400':
+          $ref: status_code.yaml#/code/400
         '404':
           $ref: status_code.yaml#/code/404
         '500':
@@ -68,8 +72,14 @@ path:
 
 components:
   schemas:
-    device:
+    fm_device:
       additionalProperties: false
+      required:
+        - name
+        - sample_rate
+        - freq
+        - longitude
+        - latitude
       properties:
         name:
           type: string
@@ -84,22 +94,28 @@ components:
           type: number
           format: float
 
-    device_response:
+    fm_device_response:
       additionalProperties: false
+      required:
+        - device
       properties:
         device:
-          $ref: "#/components/schemas/device"
+          $ref: "#/components/schemas/fm_device"
 
-    devices_response:
+    fm_devices_response:
       additionalProperties: false
+      required:
+        - devices
       properties:
         devices:
           type: array
           items:
-            $ref: "#/components/schemas/device"
+            $ref: "#/components/schemas/fm_device"
 
-    update_device_request:
+    update_fm_device_request:
       additionalProperties: false
+      required:
+        - freq
       properties:
         freq:
           type: string

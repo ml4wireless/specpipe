@@ -18,50 +18,50 @@ import (
 	"github.com/oapi-codegen/runtime"
 )
 
-// Device defines model for device.
-type Device struct {
-	Freq       *string  `json:"freq,omitempty"`
-	Latitude   *float32 `json:"latitude,omitempty"`
-	Longitude  *float32 `json:"longitude,omitempty"`
-	Name       *string  `json:"name,omitempty"`
-	SampleRate *string  `json:"sample_rate,omitempty"`
-}
-
-// DeviceResponse defines model for device_response.
-type DeviceResponse struct {
-	Device *Device `json:"device,omitempty"`
-}
-
-// DevicesResponse defines model for devices_response.
-type DevicesResponse struct {
-	Devices *[]Device `json:"devices,omitempty"`
-}
-
 // ErrorResponse defines model for error_response.
 type ErrorResponse struct {
-	Detail *string `json:"detail,omitempty"`
-	Title  *string `json:"title,omitempty"`
+	Detail string `json:"detail"`
+	Title  string `json:"title"`
 }
 
-// UpdateDeviceRequest defines model for update_device_request.
-type UpdateDeviceRequest struct {
-	Freq *string `json:"freq,omitempty"`
+// FmDevice defines model for fm_device.
+type FmDevice struct {
+	Freq       string  `json:"freq"`
+	Latitude   float32 `json:"latitude"`
+	Longitude  float32 `json:"longitude"`
+	Name       string  `json:"name"`
+	SampleRate string  `json:"sample_rate"`
 }
 
-// PutDevicesDeviceidJSONRequestBody defines body for PutDevicesDeviceid for application/json ContentType.
-type PutDevicesDeviceidJSONRequestBody = UpdateDeviceRequest
+// FmDeviceResponse defines model for fm_device_response.
+type FmDeviceResponse struct {
+	Device FmDevice `json:"device"`
+}
+
+// FmDevicesResponse defines model for fm_devices_response.
+type FmDevicesResponse struct {
+	Devices []FmDevice `json:"devices"`
+}
+
+// UpdateFmDeviceRequest defines model for update_fm_device_request.
+type UpdateFmDeviceRequest struct {
+	Freq string `json:"freq"`
+}
+
+// PutFmDevicesDevicenameJSONRequestBody defines body for PutFmDevicesDevicename for application/json ContentType.
+type PutFmDevicesDevicenameJSONRequestBody = UpdateFmDeviceRequest
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
-	// List devices
-	// (GET /devices)
-	GetDevices(c *gin.Context)
-	// Read device configuration
-	// (GET /devices/{deviceid})
-	GetDevicesDeviceid(c *gin.Context, deviceid string)
-	// Update device
-	// (PUT /devices/{deviceid})
-	PutDevicesDeviceid(c *gin.Context, deviceid string)
+	// List FM devices
+	// (GET /fm/devices)
+	GetFmDevices(c *gin.Context)
+	// Read FM device configuration
+	// (GET /fm/devices/{devicename})
+	GetFmDevicesDevicename(c *gin.Context, devicename string)
+	// Update FM device
+	// (PUT /fm/devices/{devicename})
+	PutFmDevicesDevicename(c *gin.Context, devicename string)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -73,8 +73,8 @@ type ServerInterfaceWrapper struct {
 
 type MiddlewareFunc func(c *gin.Context)
 
-// GetDevices operation middleware
-func (siw *ServerInterfaceWrapper) GetDevices(c *gin.Context) {
+// GetFmDevices operation middleware
+func (siw *ServerInterfaceWrapper) GetFmDevices(c *gin.Context) {
 
 	for _, middleware := range siw.HandlerMiddlewares {
 		middleware(c)
@@ -83,20 +83,20 @@ func (siw *ServerInterfaceWrapper) GetDevices(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.GetDevices(c)
+	siw.Handler.GetFmDevices(c)
 }
 
-// GetDevicesDeviceid operation middleware
-func (siw *ServerInterfaceWrapper) GetDevicesDeviceid(c *gin.Context) {
+// GetFmDevicesDevicename operation middleware
+func (siw *ServerInterfaceWrapper) GetFmDevicesDevicename(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "deviceid" -------------
-	var deviceid string
+	// ------------- Path parameter "devicename" -------------
+	var devicename string
 
-	err = runtime.BindStyledParameter("simple", false, "deviceid", c.Param("deviceid"), &deviceid)
+	err = runtime.BindStyledParameter("simple", false, "devicename", c.Param("devicename"), &devicename)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter deviceid: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("invalid format for parameter devicename: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -107,20 +107,20 @@ func (siw *ServerInterfaceWrapper) GetDevicesDeviceid(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.GetDevicesDeviceid(c, deviceid)
+	siw.Handler.GetFmDevicesDevicename(c, devicename)
 }
 
-// PutDevicesDeviceid operation middleware
-func (siw *ServerInterfaceWrapper) PutDevicesDeviceid(c *gin.Context) {
+// PutFmDevicesDevicename operation middleware
+func (siw *ServerInterfaceWrapper) PutFmDevicesDevicename(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "deviceid" -------------
-	var deviceid string
+	// ------------- Path parameter "devicename" -------------
+	var devicename string
 
-	err = runtime.BindStyledParameter("simple", false, "deviceid", c.Param("deviceid"), &deviceid)
+	err = runtime.BindStyledParameter("simple", false, "devicename", c.Param("devicename"), &devicename)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter deviceid: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("invalid format for parameter devicename: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -131,7 +131,7 @@ func (siw *ServerInterfaceWrapper) PutDevicesDeviceid(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.PutDevicesDeviceid(c, deviceid)
+	siw.Handler.PutFmDevicesDevicename(c, devicename)
 }
 
 // GinServerOptions provides options for the Gin server.
@@ -161,24 +161,25 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 		ErrorHandler:       errorHandler,
 	}
 
-	router.GET(options.BaseURL+"/devices", wrapper.GetDevices)
-	router.GET(options.BaseURL+"/devices/:deviceid", wrapper.GetDevicesDeviceid)
-	router.PUT(options.BaseURL+"/devices/:deviceid", wrapper.PutDevicesDeviceid)
+	router.GET(options.BaseURL+"/fm/devices", wrapper.GetFmDevices)
+	router.GET(options.BaseURL+"/fm/devices/:devicename", wrapper.GetFmDevicesDevicename)
+	router.PUT(options.BaseURL+"/fm/devices/:devicename", wrapper.PutFmDevicesDevicename)
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+xUwY7TMBD9lWrgGDXR7nLxDbSAKhBUrDihqvLGk65Xie0djytVVf4d2UnaUiLUhYJ6",
-	"4BQnefa8ee95tlDaxlmDhj2ILfjyARuZlgrXusS4kkpp1tbIek7WIbFGD6KStccM3MGnLVSET/HJG4cg",
-	"wDNps4I2g1qy5qDSeZWlRjIIqGorGbIBbUJzj5TQ1qyeATeywdGqXjauxiVJHvvf7o6y949YctzRdb0k",
-	"9M4a/9z295q9JKxAwIt8r2/ei5v3qF/U939GIC01Y+NPpbJjIonkZpwaEln6fWIsdT1qEmuuT7UnOCUZ",
-	"lzuXngJ6Pk9Gfy4XP2lT2QTuSMKdw3KuHU7ukNZIk9fzGWSwRvLaGhBQTK+nV5GpdWik0yDgelpMC8jA",
-	"SX5IBPIDl1aY6Ed+MvKfKRDwHvm2h2QwCJ7gV0URH6U1jKZr3Llal2lv/ugjh+EWn+b9QdRSwwp9Sdpx",
-	"187nD7GXV2esepSikZozw0hG1oPEb+OO5I8PTSNpAwI+as8TtdOI5cqD+Dbcv0UED/3l226hVXuC4Lc9",
-	"NvlFskFGikdvj0iqPU7H92guDJPo8G/MqCZUIJgCZgcqHedv8de9PsHqm+LmH1r9yfLknQ1GXWbKvqBU",
-	"fcompTWVXoUuNGORy8CFkWjNw6VEK83KN1Ztzqby+DROYv/Irf0f7QuL9tdkXR/u0Qka4Wl/l9FANQjI",
-	"1wW0i/Z7AAAA//90ryRPNwoAAA==",
+	"H4sIAAAAAAAC/+xVTU/cMBD9K9G0x2izAnrJrYhSoX6tQD1VaGXiyWIUfzAer7Ra5b9Xdja7AQJaWoQ4",
+	"cIrljGfevPfGXkNltbMGDXso1+Cra9QiLZHI0pzQO2s8xh0hpWJljWhmZB0SK/RQ1qLxmIMbbK1BIgvV",
+	"xBWvHEIJnkmZBbQ5sOIGR/60ORDeBkUoofzTZ+jjL/M+3l7dYMUxU63nEpeqei64mvB2FFojWHGQKV9t",
+	"SQuGEurGCoZteRP0FVKKtmbxjHAjNI5W9UK7BuckeA9aEvYB0iGMTY27GZ8k7t/l7Wn/SFhDCR+KnY+K",
+	"jYmKnT4PxU3bT2Lz/wcuLRWj9s+AucUjiMTqEdh+FHdwUjDOh9TeBvT8Mt4cc8FDFDFMmdqmBN2YwYXD",
+	"aqYcZhdIS6Ts8+wMclgieWUNlDCdHE4OYgPWoRFOQQmHk+lkCjk4wdcJVFHrYsDqAlNXEbaIbZ1JKOEr",
+	"8qk+2QRFtJ126cDBdBo/lTWMpmPEuUZV6XRx4yOQ/u7ZW62BP1LjEn1FynHX1q9vsadPL1j43n04UvPM",
+	"MJIRTU/1l3giaeeD1oJWUMJ35Tk7/ZHJLVMsFn44EzF+QHix7hZxtNu92D/ZxicNSWhkpFhjfQ9wlznb",
+	"hKq4FTXvL5I+YPN/Z0CmgPmAtvtmvXwN/feQ/+hV5T8WMjvvht531Y9esfpPy9mpDUa+Td+fo5A732eV",
+	"NbVahM7BY0OQgwsjPp+FN+fzJPixlasXY/zRp6S9+w5EeO37qL2P2t1R+53ssxu20TcmnkgpunkJ1EAJ",
+	"xXIK7WX7NwAA//8uknAwFQwAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

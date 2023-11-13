@@ -1,30 +1,43 @@
 package common
 
-import "fmt"
-
-var (
-	ClusterSubjectPrefix string = "specpipe.cluster"
-	DataSubjectPrefix    string = "specpipe.data"
+import (
+	"fmt"
+	"strings"
 )
+
+const (
+	DataSubjectPrefix    string = "specpipe.data"    // stream subject
+	ClusterSubjectPrefix string = "specpipe-cluster" // simple subject
+
+	KVStoreBucket string = "specpipe"
+)
+
+const OkMsg string = "ok"
 
 type ClusterCmd string
 
-var (
-	RegisterCmd    ClusterCmd = "register"
-	DeregisterCmd  ClusterCmd = "deregister"
+const (
 	HealthCheckCmd ClusterCmd = "health"
 )
 
 type SDRType string
 
-var (
+const (
 	FM SDRType = "fm"
 )
+
+func DataSubject(sdrType SDRType, deviceName string) string {
+	return fmt.Sprintf("%s.%s.%s", DataSubjectPrefix, sdrType, deviceName)
+}
 
 func ClusterSubject(sdrType SDRType, deviceName string, cmd ClusterCmd) string {
 	return fmt.Sprintf("%s.%s.%s.%s", ClusterSubjectPrefix, sdrType, deviceName, cmd)
 }
 
-func DataSubject(sdrType SDRType, deviceName string) string {
-	return fmt.Sprintf("%s.%s.%s", DataSubjectPrefix, sdrType, deviceName)
+func KVStoreKey(sdrType SDRType, deviceName string) string {
+	return fmt.Sprintf("%s_%s", sdrType, deviceName)
+}
+
+func DeviceNameFromKey(key string) string {
+	return strings.Split(key, "_")[1]
 }

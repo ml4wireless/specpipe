@@ -6,9 +6,11 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/ml4wireless/specpipe/common"
 	"github.com/ml4wireless/specpipe/edge"
+	"github.com/nats-io/nats.go/jetstream"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -23,7 +25,7 @@ var fmCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		publisher, err := common.NewNatsPublisher(config.Pub.NatsUrl)
+		publisher, err := common.NewNatsPublisher(config.Nats.Url)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -31,7 +33,23 @@ var fmCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		clusterConn, err := common.NewNATSConn(config.Pub.NatsUrl)
+		clusterConn, err := common.NewNATSConn(config.Nats.Url)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer clusterConn.Close()
+		kvConn, err := common.NewNATSConn(config.Nats.Url)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer kvConn.Close()
+		js, err := jetstream.New(kvConn)
+		if err != nil {
+			log.Fatal(err)
+		}
+		regCtx, regCancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer regCancel()
+		kv, err := js.KeyValue(regCtx, common.KVStoreBucket)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -46,24 +64,27 @@ var fmCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		sub, err := edge.RegisterDevice(clusterConn, common.FM, config.Device.Name, deviceInfoBytes)
+		heartbeatSub, err := edge.RegisterDevice(regCtx, clusterConn, kv, common.FM, config.Device.Name, deviceInfoBytes)
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
 		sig := make(chan os.Signal, 1)
 		signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 
-		log.Infof("start specpipe edge FM name=%s freq=%s pub-subject=%s", config.Device.Name, config.Rtlsdr.Fm.Freq, config.Pub.Subject)
+		log.Infof("start specpipe edge FM name=%s freq=%s nats-subject=%s", config.Device.Name, config.Rtlsdr.Fm.Freq, config.Nats.Subject)
 		done := make(chan bool, 1)
 		go func() {
 			if err := edge.CaptureAudio(ctx, config, publisher, logger); err != nil {
 				log.Fatal(err)
 			}
 			logger.Info("audio capture stopped")
-			if err = edge.DeregisterDevice(clusterConn, common.FM, config.Device.Name, sub); err != nil {
+			deregCtx, deregCancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer deregCancel()
+			if err = edge.DeregisterDevice(deregCtx, kv, common.FM, config.Device.Name, heartbeatSub); err != nil {
 				log.Fatal(err)
 			}
 			logger.Info("device deregistered")
@@ -104,10 +125,10 @@ func init() {
 	viper.BindPFlag("rtlsdr.rpcServerPort", fmCmd.Flags().Lookup("rpc-server-port"))
 
 	fmCmd.Flags().StringP("nats-url", "", "", "NATS URL")
-	viper.BindPFlag("pub.natsUrl", fmCmd.Flags().Lookup("nats-url"))
+	viper.BindPFlag("nats.url", fmCmd.Flags().Lookup("nats-url"))
 
-	fmCmd.Flags().StringP("publish-subject", "", "", "NATS publish subject")
-	viper.BindPFlag("pub.subject", fmCmd.Flags().Lookup("publish-subject"))
+	fmCmd.Flags().StringP("nats-subject", "", "", "NATS subject")
+	viper.BindPFlag("nats.subject", fmCmd.Flags().Lookup("nats-subject"))
 
 	fmCmd.Flags().StringP("log-level", "", "", "log level")
 	viper.BindPFlag("logging.level", fmCmd.Flags().Lookup("log-level"))
