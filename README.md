@@ -6,10 +6,10 @@ SpecPipe leverages software-defined radios (SDRs) and open-source tools like lib
 `sp-server` provides a control plane in the cloud, enabling management and monitoring of edge devices and their captured data streams.
 
 Key Features:
-- Portable - Decouples system dependencies from application, packaging everything into a single container for easy edge deployment.
-- Intuitive - User-friendly CLI with robust configuration options via file, CLI args, or environment variables.
-- Transparent - Server tracks edge node status, performs health checks, and exposes REST APIs for node management.
-- Fault Tolerant - Automatic reconnections and timeouts between edge and cloud.
+- Lightweight and portable - decouples system dependencies from application, packaging everything into a single container for easy edge deployment.
+- Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
+- Transparent - server tracks edge node status, performs health checks, and exposes REST APIs for node management.
+- Fault Tolerant - automatic reconnections and timeouts between edge and cloud.
 ## Getting Started
 ### Install Dependencies
 In order to extract IQ data from the SDR hardware, the `librtlsdr` binaries have to be installed on the host machine.
@@ -99,7 +99,7 @@ docker run --rm -p 80:8888 -d minghsu0107/specpipe-server \
     --http-server-port=8888 \
     --nats-url=nats://mytoken@host.docker.internal:4222
 ```
-### Cloud APIs
+#### Cloud APIs
 View configurations of all registered FM devices.
 ```bash
 curl http://localhost/v0/fm/devices
