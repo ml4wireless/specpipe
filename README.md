@@ -121,12 +121,13 @@ Example response:
 ```
 {"device":{"freq":"99700000","latitude":0,"longitude":0,"name":"dev1","sample_rate":"170k"}}
 ```
-Update configuration of a registered FM device.
+
+Update configuration of a registered FM device. For example, you could tune a device to frequency 94100000 with samping rate 200k on the fly.
 ```bash
 curl -X PUT http://localhost/v0/fm/devices/<device_name> --data '{"freq":"94100000","sample_rate": "200k"}'
 ```
 
-You can optionally run the Swagger UI to view all APIs in your browser at `http://localhost:5555`. Before running the following command, you should modify `server/openapi/main.yaml#/servers.url` from `/v0` to `http://localhost/v0` in order to make API's `Try it out` works.
+You could optionally run the Swagger UI to view all APIs in your browser at `http://localhost:5555`. Before running the following command, you should modify `server/openapi/main.yaml#/servers.url` from `/v0` to `http://localhost/v0` in order to make API's `Try it out` works.
 
 ```bash
 docker run --rm -d -p 5555:8080 -e API_URL=api/main.yaml -v $(PWD)/server/openapi:/usr/share/nginx/html/api swaggerapi/swagger-ui
