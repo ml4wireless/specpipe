@@ -93,6 +93,7 @@ func (s *SpecpipeServer) PutFmDevicesDevicename(c *gin.Context, deviceName strin
 func NewHttpServer(specpipeServer *SpecpipeServer, logger common.ServerLogrus, port string) *http.Server {
 	r := gin.New()
 	r.Use(gin.Recovery())
+	r.Use(CorsMiddleware())
 	r.Use(LoggingMiddleware(logger))
 
 	RegisterHandlersWithOptions(r, specpipeServer, GinServerOptions{
