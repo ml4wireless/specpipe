@@ -83,14 +83,14 @@ docker run --rm -d minghsu0107/specpipe-edge fm \
 Start the API server at `localhost:8888`, which serves as the control plane enabling viewing of registered services and management of device configurations.
 
 ```bash
-docker run --rm -p 8888:8888 -d minghsu0107/specpipe-server \
+docker run --rm -p 80:8888 -d minghsu0107/specpipe-server \
     --http-server-port=8888 \
     --nats-url=nats://mytoken@host.docker.internal:4222
 ```
 
 View configurations of all registered FM devices.
 ```bash
-curl http://localhost:8888/v0/fm/devices
+curl http://localhost/v0/fm/devices
 ```
 Example response:
 ```
@@ -99,7 +99,7 @@ Example response:
 
 View configuration of a registered FM device.
 ```bash
-curl http://localhost:8888/v0/fm/devices/<device_name>
+curl http://localhost/v0/fm/devices/<device_name>
 ```
 Example response:
 ```
@@ -107,5 +107,11 @@ Example response:
 ```
 Update configuration of a registered FM device.
 ```bash
-curl -X PUT http://localhost:8888/v0/fm/devices/<device_name> --data '{"freq":"94100000"}'
+curl -X PUT http://localhost/v0/fm/devices/<device_name> --data '{"freq":"94100000"}'
+```
+
+You can optionally run the Swagger UI to view all APIs in your browser at `http://localhost:5555`. Before running the following command, you should modify `server/openapi/main.yaml#/servers.url` into `http://localhost/v0` in order to make API's `Try it out` works.
+
+```bash
+docker run --rm -d -p 5555:8080 -e API_URL=api/main.yaml -v $(PWD)/server/openapi:/usr/share/nginx/html/api swaggerapi/swagger-ui
 ```
