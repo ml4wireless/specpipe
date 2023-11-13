@@ -39,12 +39,7 @@ var fmCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 		defer clusterConn.Close()
-		kvConn, err := common.NewNATSConn(config.Nats.Url)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer kvConn.Close()
-		js, err := jetstream.New(kvConn)
+		js, err := jetstream.New(clusterConn)
 		if err != nil {
 			log.Fatal(err)
 		}
