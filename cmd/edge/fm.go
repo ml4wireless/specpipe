@@ -96,8 +96,11 @@ var fmCmd = &cobra.Command{
 					return
 				case newFmDevice := <-fmDeviceConfigChan:
 					subCancel()
+
 					config.Rtlsdr.Fm.Freq = newFmDevice.Freq
-					logger.Infof("device %s tuned to frequency: %s", config.Device.Name, config.Rtlsdr.Fm.Freq)
+					config.Rtlsdr.Fm.SampleRate = newFmDevice.SampleRate
+
+					logger.Infof("device %s tuned to frequency=%s sampling_rate=%s", config.Device.Name, config.Rtlsdr.Fm.Freq, config.Rtlsdr.Fm.SampleRate)
 					subCtx, subCancel = context.WithCancel(ctx)
 					go func() {
 						if err := edge.CaptureAudio(subCtx, config, publisher, logger); err != nil {
