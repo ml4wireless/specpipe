@@ -6,7 +6,7 @@ servers:
   - url: /v0
 
 paths:
-  /devices/{deviceid}:
-    $ref: devices.yaml#/path/devices_deviceid
-  /devices:
-    $ref: devices.yaml#/path/devices
+  /fm/devices/{devicename}:
+    $ref: devices.yaml#/path/fm_devices_devicename
+  /fm/devices:
+    $ref: devices.yaml#/path/fm_devices
