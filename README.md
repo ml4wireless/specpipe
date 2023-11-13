@@ -9,7 +9,7 @@ Key Features:
 - Transparent - server tracks edge node status, performs health checks, and exposes REST APIs for node management.
 - Fault tolerant - automatic reconnections and timeouts between edge and cloud.
 - Horizontally scalable - seamlessly orchestrates and manages a large, scalable number of edge devices.
-- Flexible configuration - allows dynamic device configuration on the fly, enabling flexibility for operating large clusters.
+- Dynamic configuration - allows dynamic device configuration on the fly, enabling flexibility for operating large clusters.
 - Portable - packages complex dependencies into a single container for easy edge deployment.
 - Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
 - Lightweight - small binaries with low memory footprint.
