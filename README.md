@@ -1,16 +1,18 @@
 # SpecPipe - Distributed Data Pipeline for Spectrum
-SpecPipe leverages software-defined radios (SDRs) and open-source tools like librtlsdr to capture, process, and analyze radio spectrum data at the edge. It consists of two components - `sp-edge` and `sp-server`.
+SpecPipe leverages software-defined radios (SDRs) and open-source tools like librtlsdr to capture, process, and analyze radio spectrum data. It consists of two components - `sp-edge` and `sp-server`.
 
 `sp-edge` runs on edge devices, managing SDR hardware to capture radio spectrum data. It processes the data and streams it to the cloud.
 
-`sp-server` provides a control plane in the cloud, enabling management and monitoring of edge devices and their captured data streams. It is horizontally scalable, allowing easy orchestration of many edge devices out-of-the-box.
+`sp-server` provides a control plane in the cloud that seamlessly orchestrates and manages a large, scalable number of edge devices. It enables monitoring of devices and their captured data streams.
 
 Key Features:
-- Lightweight and portable - decouples system dependencies from application, packaging everything into a single container for easy edge deployment.
-- Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
 - Transparent - server tracks edge node status, performs health checks, and exposes REST APIs for node management.
 - Fault Tolerant - automatic reconnections and timeouts between edge and cloud.
-- Horizontally scalable - orchestrate many edge devices seamlessly out-of-the-box.
+- Horizontally scalable - seamlessly orchestrates and manages a large, scalable number of edge devices.
+- Flexible configuration - allows dynamic device configuration on the fly, enabling flexibility for operating large clusters.
+- Portable - decouples system dependencies from application, packaging everything into a single container for easy edge deployment.
+- Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
+- Lightweight - small binaries with low memory footprint.
 ## Getting Started
 ### Install Dependencies
 In order to extract IQ data from the SDR hardware, the `librtlsdr` binaries have to be installed on the host machine.
