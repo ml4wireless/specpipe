@@ -7,15 +7,15 @@ The system is designed for efficient, resilient spectrum data collection and pro
 
 Key Features:
 - Transparent - server tracks edge node status, performs health checks, and exposes REST APIs for node management.
-- Fault Tolerant - automatic reconnections and timeouts between edge and cloud.
+- Fault tolerant - automatic reconnections and timeouts between edge and cloud.
 - Horizontally scalable - seamlessly orchestrates and manages a large, scalable number of edge devices.
 - Flexible configuration - allows dynamic device configuration on the fly, enabling flexibility for operating large clusters.
-- Portable - decouples system dependencies from application, packaging everything into a single container for easy edge deployment.
+- Portable - packages complex dependencies into a single container for easy edge deployment.
 - Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
 - Lightweight - small binaries with low memory footprint.
 ## Getting Started
 ### Install Dependencies
-In order to extract IQ data from the SDR hardware, the `librtlsdr` binaries have to be installed on the host machine.
+In order to extract raw data from the SDR hardware, the `librtlsdr` binaries have to be installed on the host machine.
 
 First, have `gcc`, `g++`, and `make` installed. 
 
@@ -84,7 +84,7 @@ Start NATS JetStream container and create stream `specpipe` and KV store `specpi
 ```bash
 docker-compose up -d
 ```
-Run `specpipe-edge` container, which retrieves IQ data remotely from the `rtl_rpcd` daemon on the host machine and streams demodulized data to JetStream (take `fm` as example).
+Run `specpipe-edge` container, which retrieves raw data remotely from the `rtl_rpcd` daemon on the host machine and streams demodulized data to JetStream (take `fm` as example).
 
 ```bash
 docker run --rm -d minghsu0107/specpipe-edge fm \
