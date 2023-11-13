@@ -17,7 +17,6 @@ var (
 	ErrEmptyFreq        = errors.New("frequency cannot be empty")
 	ErrEmptySampleRate  = errors.New("samping rate cannot be empty")
 	ErrEmptyReampleRate = errors.New("resamping rate cannot be empty")
-	ErrEOF              = errors.New("read EOF from rtl_fm")
 )
 
 func CaptureAudio(ctx context.Context, config *Config, publisher message.Publisher, logger common.EdgeLogrus) error {
@@ -54,13 +53,19 @@ func CaptureAudio(ctx context.Context, config *Config, publisher message.Publish
 	logger.Info("start caputuring FM audio")
 	for {
 		n, err := stdout.Read(audio)
+		if err != nil {
+			if err == io.EOF {
+				logger.Info("read EOF")
+			}
+			goto CLEANUP
+		}
 		for n < 16384 {
 			bytesRead, err := stdout.Read(audio[n:])
 			if err != nil {
 				if err == io.EOF {
-					return ErrEOF
+					logger.Info("read EOF")
 				}
-				logger.Error(err)
+				goto CLEANUP
 			}
 			n += bytesRead
 			if n < 16384 {
@@ -68,35 +73,26 @@ func CaptureAudio(ctx context.Context, config *Config, publisher message.Publish
 			}
 			select {
 			case <-ctx.Done():
-				if err = cleanup(); err != nil {
-					return err
-				}
-				return nil
+				goto CLEANUP
 			default:
 			}
-		}
-		if err == io.EOF {
-			logger.Info("read EOF")
-			break
-		}
-		if err != nil {
-			return err
 		}
 		payload := make([]byte, 2*8192)
 		copy(payload, audio)
 		msg := message.NewMessage(watermill.NewShortUUID(), payload)
 		msg.Metadata.Set(common.TimestampHeader, strconv.FormatInt(time.Now().UTC().Unix(), 10))
-		if err := publisher.Publish(config.Pub.Subject, msg); err != nil {
+		if err := publisher.Publish(config.Nats.Subject, msg); err != nil {
 			logger.Error(err)
 		}
 		select {
 		case <-ctx.Done():
-			if err = cleanup(); err != nil {
-				return err
-			}
-			return nil
+			goto CLEANUP
 		default:
 		}
+	}
+CLEANUP:
+	if err = cleanup(); err != nil {
+		return err
 	}
 	return nil
 }
