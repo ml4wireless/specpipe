@@ -70,6 +70,7 @@ sudo make && sudo make install
 ```
 ### Build Docker Image
 ```bash
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
 make docker
 ```
 ### Deployment
@@ -103,7 +104,7 @@ docker run --rm -p 80:8888 -d minghsu0107/specpipe-server \
     --http-server-port=8888 \
     --nats-url=nats://mytoken@host.docker.internal:4222
 ```
-#### Cloud APIs
+### Cloud APIs
 View configurations of all registered FM devices.
 ```bash
 curl http://localhost/v0/fm/devices
