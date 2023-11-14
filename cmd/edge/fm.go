@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"os"
 	"os/signal"
 	"syscall"
@@ -69,7 +70,7 @@ var fmCmd = &cobra.Command{
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
-		watchSub, fmDeviceConfigChan, err := edge.WatchFmDeviceConfig(ctx, clusterConn, kv, config.Device.Name, logger)
+		watchSub, fmDeviceChan, err := edge.WatchDevice(ctx, clusterConn, kv, common.FM, config.Device.Name, logger)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -94,7 +95,12 @@ var fmCmd = &cobra.Command{
 					logger.Info("device deregistered")
 					done <- true
 					return
-				case newFmDevice := <-fmDeviceConfigChan:
+				case newDevice := <-fmDeviceChan:
+					newFmDevice, ok := newDevice.(*common.FMDevice)
+					if !ok {
+						logger.Error(errors.New("casting fm device type error"))
+						break
+					}
 					subCancel()
 
 					config.Rtlsdr.Fm.Freq = newFmDevice.Freq
@@ -112,7 +118,7 @@ var fmCmd = &cobra.Command{
 		}()
 
 		log.Infof("start specpipe edge FM name=%s nats-subject=%s", config.Device.Name, config.Nats.Subject)
-		fmDeviceConfigChan <- deviceInfo
+		fmDeviceChan <- &deviceInfo
 
 		<-sig
 		cancel()

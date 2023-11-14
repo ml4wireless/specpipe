@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -27,7 +28,7 @@ func (s *SpecpipeServer) GetFmDevices(c *gin.Context) {
 	for _, device := range devices {
 		fmDevice, ok := device.(*common.FMDevice)
 		if !ok {
-			errorHandler(c, fmt.Errorf("casting fm device type error: %w", err), http.StatusInternalServerError)
+			errorHandler(c, errors.New("casting fm device type error"), http.StatusInternalServerError)
 			return
 		}
 		fmDevicesPresenter = append(fmDevicesPresenter, FmDevice{
