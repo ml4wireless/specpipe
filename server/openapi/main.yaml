@@ -7,6 +7,10 @@ servers:
 
 paths:
   /fm/devices/{devicename}:
-    $ref: devices.yaml#/path/fm_devices_devicename
+    $ref: fm_devices.yaml#/path/fm_devices_devicename
   /fm/devices:
-    $ref: devices.yaml#/path/fm_devices
+    $ref: fm_devices.yaml#/path/fm_devices
+  /iq/devices/{devicename}:
+    $ref: iq_devices.yaml#/path/iq_devices_devicename
+  /iq/devices:
+    $ref: iq_devices.yaml#/path/iq_devices

@@ -21,7 +21,7 @@ var fmCmd = &cobra.Command{
 	Use:   "fm",
 	Short: "FM audio capturer",
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := edge.NewConfig()
+		config, err := edge.NewConfig(common.FM)
 		if err != nil {
 			log.Fatal(err)
 		}

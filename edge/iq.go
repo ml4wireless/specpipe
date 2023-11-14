@@ -12,17 +12,14 @@ import (
 	"github.com/ml4wireless/specpipe/common"
 )
 
-func CaptureAudio(ctx context.Context, config *Config, publisher message.Publisher, logger common.EdgeLogrus) error {
-	if config.Rtlsdr.Fm.Freq == "" {
+func CaptureIQ(ctx context.Context, config *Config, publisher message.Publisher, logger common.EdgeLogrus) error {
+	if config.Rtlsdr.Iq.Freq == "" {
 		return ErrEmptyFreq
 	}
-	if config.Rtlsdr.Fm.SampleRate == "" {
+	if config.Rtlsdr.Iq.SampleRate == "" {
 		return ErrEmptySampleRate
 	}
-	if config.Rtlsdr.Fm.ResampleRate == "" {
-		return ErrEmptyReampleRate
-	}
-	cmd := exec.Command("rtl_fm", "-M", "fm", "-s", config.Rtlsdr.Fm.SampleRate, "-o", "4", "-A", "fast", "-r", config.Rtlsdr.Fm.ResampleRate, "-l", "0", "-E", "deemp", "-f", config.Rtlsdr.Fm.Freq)
+	cmd := exec.Command("rtl_sdr", "-s", config.Rtlsdr.Iq.SampleRate, "-f", config.Rtlsdr.Iq.Freq, "-b", "262144", "-")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return err
@@ -39,18 +36,18 @@ func CaptureAudio(ctx context.Context, config *Config, publisher message.Publish
 		return nil
 	}
 
-	audio := make([]byte, 2*8192)
-	logger.Info("start FM audio capturer")
+	chunk := make([]byte, 16*16384)
+	logger.Info("start IQ capturer")
 	for {
-		n, err := stdout.Read(audio)
+		n, err := stdout.Read(chunk)
 		if err != nil {
 			if err == io.EOF {
 				logger.Info("read EOF")
 			}
 			goto CLEANUP
 		}
-		for n < 16384 {
-			bytesRead, err := stdout.Read(audio[n:])
+		for n < 262144 {
+			bytesRead, err := stdout.Read(chunk[n:])
 			if err != nil {
 				if err == io.EOF {
 					logger.Info("read EOF")
@@ -67,8 +64,8 @@ func CaptureAudio(ctx context.Context, config *Config, publisher message.Publish
 			default:
 			}
 		}
-		payload := make([]byte, 2*8192)
-		copy(payload, audio)
+		payload := make([]byte, 16*16384)
+		copy(payload, chunk)
 		msg := message.NewMessage(watermill.NewShortUUID(), payload)
 		msg.Metadata.Set(common.TimestampHeader, strconv.FormatInt(time.Now().UTC().Unix(), 10))
 		if err := publisher.Publish(config.Nats.Subject, msg); err != nil {

@@ -7,6 +7,7 @@ import (
 
 const (
 	DataSubjectPrefix    string = "specpipe.data"    // stream subject
+	IqDataSubjectPrefix  string = "specpipe-iq.data" // stream subject
 	ClusterSubjectPrefix string = "specpipe-cluster" // simple subject
 
 	KVStoreBucket string = "specpipe"
@@ -25,9 +26,13 @@ type SDRType string
 
 const (
 	FM SDRType = "fm"
+	IQ SDRType = "iq"
 )
 
 func DataSubject(sdrType SDRType, deviceName string) string {
+	if sdrType == IQ {
+		return fmt.Sprintf("%s.%s.%s", IqDataSubjectPrefix, sdrType, deviceName)
+	}
 	return fmt.Sprintf("%s.%s.%s", DataSubjectPrefix, sdrType, deviceName)
 }
 

@@ -35,6 +35,12 @@ func (s *Store) GetDevice(ctx context.Context, sdrType common.SDRType, deviceNam
 			return false, nil, err
 		}
 		return true, &device, nil
+	case common.IQ:
+		var device common.IQDevice
+		if err = json.Unmarshal(entry.Value(), &device); err != nil {
+			return false, nil, err
+		}
+		return true, &device, nil
 	}
 	return false, nil, nil
 }

@@ -25,6 +25,10 @@ type RtlsdrConfig struct {
 		SampleRate   string
 		ResampleRate string
 	}
+	Iq struct {
+		Freq       string
+		SampleRate string
+	}
 	RpcServerAddr string
 	RpcServerPort string
 }
@@ -45,19 +49,21 @@ func setDefault() {
 	viper.SetDefault("rtlsdr.fm.freq", "")
 	viper.SetDefault("rtlsdr.fm.sampleRate", "170k")
 	viper.SetDefault("rtlsdr.fm.resampleRate", "32k")
+	viper.SetDefault("rtlsdr.iq.freq", "")
+	viper.SetDefault("rtlsdr.iq.sampleRate", "2048000")
 	viper.SetDefault("rtlsdr.rpcServerAddr", "127.0.0.1")
 	viper.SetDefault("rtlsdr.rpcServerPort", "40000")
 	viper.SetDefault("nats.url", "nats://127.0.0.1:4222")
 	viper.SetDefault("logging.level", "info")
 }
 
-func NewConfig() (*Config, error) {
+func NewConfig(sdrType common.SDRType) (*Config, error) {
 	setDefault()
 
 	var c Config
 	if err := viper.Unmarshal(&c); err != nil {
 		return nil, err
 	}
-	c.Nats.Subject = common.DataSubject(common.FM, c.Device.Name)
+	c.Nats.Subject = common.DataSubject(sdrType, c.Device.Name)
 	return &c, nil
 }
