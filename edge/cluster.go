@@ -39,6 +39,12 @@ func WatchDevice(ctx context.Context, conn *nats.Conn, kv jetstream.KeyValue, sd
 				logger.Error(err)
 			}
 			deviceChan <- &device
+		case common.IQ:
+			var device common.IQDevice
+			if err = json.Unmarshal(entry.Value(), &device); err != nil {
+				logger.Error(err)
+			}
+			deviceChan <- &device
 		}
 		msg.Respond([]byte(common.OkMsg))
 	})

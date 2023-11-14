@@ -43,14 +43,42 @@ type FmDevicesResponse struct {
 	Devices []FmDevice `json:"devices"`
 }
 
+// IqDevice defines model for iq_device.
+type IqDevice struct {
+	Freq       string  `json:"freq"`
+	Latitude   float32 `json:"latitude"`
+	Longitude  float32 `json:"longitude"`
+	Name       string  `json:"name"`
+	SampleRate string  `json:"sample_rate"`
+}
+
+// IqDeviceResponse defines model for iq_device_response.
+type IqDeviceResponse struct {
+	Device IqDevice `json:"device"`
+}
+
+// IqDevicesResponse defines model for iq_devices_response.
+type IqDevicesResponse struct {
+	Devices []IqDevice `json:"devices"`
+}
+
 // UpdateFmDeviceRequest defines model for update_fm_device_request.
 type UpdateFmDeviceRequest struct {
 	Freq       string  `json:"freq"`
 	SampleRate *string `json:"sample_rate,omitempty"`
 }
 
+// UpdateIqDeviceRequest defines model for update_iq_device_request.
+type UpdateIqDeviceRequest struct {
+	Freq       string  `json:"freq"`
+	SampleRate *string `json:"sample_rate,omitempty"`
+}
+
 // PutFmDevicesDevicenameJSONRequestBody defines body for PutFmDevicesDevicename for application/json ContentType.
 type PutFmDevicesDevicenameJSONRequestBody = UpdateFmDeviceRequest
+
+// PutIqDevicesDevicenameJSONRequestBody defines body for PutIqDevicesDevicename for application/json ContentType.
+type PutIqDevicesDevicenameJSONRequestBody = UpdateIqDeviceRequest
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -63,6 +91,15 @@ type ServerInterface interface {
 	// Update FM device
 	// (PUT /fm/devices/{devicename})
 	PutFmDevicesDevicename(c *gin.Context, devicename string)
+	// List IQ devices
+	// (GET /iq/devices)
+	GetIqDevices(c *gin.Context)
+	// Read IQ device configuration
+	// (GET /iq/devices/{devicename})
+	GetIqDevicesDevicename(c *gin.Context, devicename string)
+	// Update IQ device
+	// (PUT /iq/devices/{devicename})
+	PutIqDevicesDevicename(c *gin.Context, devicename string)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -135,6 +172,67 @@ func (siw *ServerInterfaceWrapper) PutFmDevicesDevicename(c *gin.Context) {
 	siw.Handler.PutFmDevicesDevicename(c, devicename)
 }
 
+// GetIqDevices operation middleware
+func (siw *ServerInterfaceWrapper) GetIqDevices(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetIqDevices(c)
+}
+
+// GetIqDevicesDevicename operation middleware
+func (siw *ServerInterfaceWrapper) GetIqDevicesDevicename(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "devicename" -------------
+	var devicename string
+
+	err = runtime.BindStyledParameter("simple", false, "devicename", c.Param("devicename"), &devicename)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("invalid format for parameter devicename: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetIqDevicesDevicename(c, devicename)
+}
+
+// PutIqDevicesDevicename operation middleware
+func (siw *ServerInterfaceWrapper) PutIqDevicesDevicename(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "devicename" -------------
+	var devicename string
+
+	err = runtime.BindStyledParameter("simple", false, "devicename", c.Param("devicename"), &devicename)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("invalid format for parameter devicename: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.PutIqDevicesDevicename(c, devicename)
+}
+
 // GinServerOptions provides options for the Gin server.
 type GinServerOptions struct {
 	BaseURL      string
@@ -165,22 +263,27 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.GET(options.BaseURL+"/fm/devices", wrapper.GetFmDevices)
 	router.GET(options.BaseURL+"/fm/devices/:devicename", wrapper.GetFmDevicesDevicename)
 	router.PUT(options.BaseURL+"/fm/devices/:devicename", wrapper.PutFmDevicesDevicename)
+	router.GET(options.BaseURL+"/iq/devices", wrapper.GetIqDevices)
+	router.GET(options.BaseURL+"/iq/devices/:devicename", wrapper.GetIqDevicesDevicename)
+	router.PUT(options.BaseURL+"/iq/devices/:devicename", wrapper.PutIqDevicesDevicename)
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+xVTU/bQBD9K9a0Ryu2gF58K6JUqF8RqKcKRYt3HBZ5P5gdR4oi//dq13FiwKCkRREH",
-	"Tl6tZ2fevPdmdwWl1c4aNOyhWIEvb1GLuEQiSzNC76zxGHaElIqVNaKeknVIrNBDUYnaYwpusLUCiSxU",
-	"HVa8dAgFeCZl5tCmwIprHPnTpkB43yhCCcWfPkMff5328fbmDksOmSo9k7hQ5b7gKsL7UWi1YMWNjPkq",
-	"S1owFFDVVjBsyptG3yDFaGvme4QboXG0qhfa1TgjwTvQErEPkA5hrGs8zPgicf8ub0/7R8IKCviQbX2U",
-	"rU2UbfV5Km7cfhGb/z9wcakYtd8D5gaPIBLLZ2D7UdyNk4JxNqT2vkHPr+XN/V3yFGUIU6ayMUE3hnDl",
-	"sJwqh8kV0gIp+Ty9gBQWSF5ZAwXkk+PJUQBgHRrhFBRwPMknOaTgBN9G0FmlswHrc4xdh7ZEaPtCQgFf",
-	"kc/12ToooO20jQeO8jx8SmsYTceYc7Uq4+nszgcg/d20s5oD/8TGJfqSlOOurV/fQk+fXrHwo/typOaF",
-	"YSQj6p7qL+FE1M43WgtaQgHflefk/EciN0yxmPvhzIT4AeHZqluE0W93Yv9sEx81JKGRkUKN1SPAXeZk",
-	"HarCVtC8v2j6gPX/rQGZGkwHtD026/Uh9N9B/pODyn8qZHLZXQq+q35ywOo/LSfntjHybfr+EoXc+j4p",
-	"ranUvOkcPDYEKbhmxOfT5s35PAp+auXy1Rh/9qlpH74DAV77Pmrvo/Zw1H5H+2yHbfSNCSdiim5eGqqh",
-	"gGyRQ3vd/g0AAP//ZrzwijUMAAA=",
+	"H4sIAAAAAAAC/+xXW28aPRD9K6v5vscVi5L0Zd8apalQbzRRn6oIOetZ4mh9wZ5FQoj/XtnLXpJsUsgF",
+	"kYonLDOeOT5zxgeWkGlptEJFDtIluOwGJQtLtFbbiUVntHLodxjngoRWrBhbbdCSQAdpzgqHMZjO1hI4",
+	"EhOFX9HCIKTgyAo1hVUMJKjAnm9WMViclcIih/R3naGOv4rreH19ixn5TLmccJyLbFtwucVZL7SCkaCS",
+	"h3y5tpIRpJAXmhE05VUpr9GGaK2mW4QrJrG3qmPSFDixjDagJWDvIO3CWNe4m/FJ4p7f3pr2/y3mkMJ/",
+	"SaujZC2ipO3Pw+aG7SexuZeBC0tBKN0WMBs8zFq2eAS268UtZgcxPkuMDXFvK8a2P1uIsTm0MzF2YL5A",
+	"jKXhjHDSnfNZiY5eS5vbq+QJlF0B7B1KHyZUrkOCyrng0mA2FgajS7RztNHH8QhimKN1QitIYTg4Hhx5",
+	"ANqgYkZACseD4WAIMRhGNwF0ksuko40phlv7azF/7RGHFD4jncuzdZBHWykwHDgaDv1HphWhqhgzphBZ",
+	"OJ3cOg+ktvONH8COysPFObrMCkPVtX588Xf68IqF7/3E6Kk5UoRWsaKm+pM/EXrnSimZXUAKX4Wj6Pxb",
+	"xBumiE1dd7J9fIfwZFkt/AO12oj9syY+9NAyiYTW11jeA1xljtahwm/5ntfPYR2w/r4VINkS4w5t98V6",
+	"tYv+b9D+k522/5Tx6KJ6FFxV/WSH1b9ris51qfh+6v4CGW91H2Va5WJaVgruG4IYTNmj83G5dzoPDT/V",
+	"fPFqjD9qiKu7PuDhrQ6jdhi1u6P2K8inHbbHPEbMNjH10WwHpt730/W9mfro599MvSV8Y1Nv2P+3Tb3n",
+	"b9XhpXknpt7o/iWmvm86fzNTf/j/ccemfhi192zqzbD1eow/EVJU81LaAlJI5kNYXa3+BAAA///J25q/",
+	"PRcAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

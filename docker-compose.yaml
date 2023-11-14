@@ -5,6 +5,7 @@ services:
     command: >
       /bin/sh -c "
       nats -s nats://mytoken@nats:4222 str add "specpipe" --subjects="specpipe.data.*.*" --ack --max-msgs=-1 --max-msgs-per-subject=-1 --max-bytes=-1 --max-age=1y --storage=file --retention=limits --max-msg-size=1048576 --discard=old --replicas=1 --dupe-window="0s" --no-allow-rollup --no-deny-delete --no-deny-purge;
+      nats -s nats://mytoken@nats:4222 str add "specpipe-iq" --subjects="specpipe-iq.data.*.*" --ack --max-msgs=-1 --max-msgs-per-subject=-1 --max-bytes=-1 --max-age=5m --storage=file --retention=limits --max-msg-size=1048576 --discard=old --replicas=1 --dupe-window="0s" --no-allow-rollup --no-deny-delete --no-deny-purge;
       nats -s nats://mytoken@nats:4222 str info "specpipe" -j;
       nats -s nats://mytoken@nats:4222 kv add "specpipe" --history=1 --replicas=1 --storage=file;
       nats -s nats://mytoken@nats:4222 kv info "specpipe";

@@ -1,0 +1,123 @@
+path:
+  iq_devices:
+    get:
+      summary: List IQ devices
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/iq_devices_response"
+        '500':
+          $ref: status_code.yaml#/code/500
+      tags:
+        - device
+  iq_devices_devicename:
+    get:
+      summary: Read IQ device configuration
+      parameters:
+        - in: path
+          name: devicename
+          description: device name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/iq_device_response"
+        '400':
+          $ref: status_code.yaml#/code/400
+        '404':
+          $ref: status_code.yaml#/code/404
+        '500':
+           $ref: status_code.yaml#/code/500
+      tags:
+        - device
+
+    put:
+      summary: Update IQ device
+      parameters:
+        - in: path
+          name: devicename
+          description: device name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/update_iq_device_request"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/iq_device_response"
+        '400':
+          $ref: status_code.yaml#/code/400
+        '404':
+          $ref: status_code.yaml#/code/404
+        '500':
+          $ref: status_code.yaml#/code/500
+      tags:
+        - device
+
+components:
+  schemas:
+    iq_device:
+      additionalProperties: false
+      required:
+        - name
+        - sample_rate
+        - freq
+        - longitude
+        - latitude
+      properties:
+        name:
+          type: string
+        sample_rate:
+          type: string
+        freq:
+          type: string
+        longitude:
+          type: number
+          format: float
+        latitude:
+          type: number
+          format: float
+
+    iq_device_response:
+      additionalProperties: false
+      required:
+        - device
+      properties:
+        device:
+          $ref: "#/components/schemas/iq_device"
+
+    iq_devices_response:
+      additionalProperties: false
+      required:
+        - devices
+      properties:
+        devices:
+          type: array
+          items:
+            $ref: "#/components/schemas/iq_device"
+
+    update_iq_device_request:
+      additionalProperties: false
+      required:
+        - freq
+      properties:
+        freq:
+          type: string
+        sample_rate:
+          type: string
