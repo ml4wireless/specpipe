@@ -4,11 +4,13 @@ GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOINSTALL=$(GOCMD) install
 
+VERSION=0.0.0
+
 build: build-server build-edge
 build-server:
-	$(GOBUILD) -ldflags="-X main.Version=v0.3.2 -w -s" -o sp-server ./cmd/server
+	$(GOBUILD) -ldflags="-X main.Version=$(VERSION) -w -s" -o sp-server ./cmd/server
 build-edge:
-	$(GOBUILD) -ldflags="-X main.Version=v0.3.2 -w -s" -o sp-edge ./cmd/edge
+	$(GOBUILD) -ldflags="-X main.Version=$(VERSION) -w -s" -o sp-edge ./cmd/edge
 
 codegen: codegen-install
 	swagger-codegen generate -l openapi-yaml -i server/openapi/main.yaml -t server/openapi -DoutputFile=merge.yaml
@@ -19,9 +21,9 @@ codegen-install:
 
 docker: docker-server docker-edge
 docker-server:
-	@docker build -f ./build/server/Dockerfile --build-arg VERSION=v0.3.2 -t minghsu0107/specpipe-server .
+	@docker build -f ./build/server/Dockerfile --build-arg VERSION=$(VERSION) -t minghsu0107/specpipe-server .
 docker-edge:
-	@docker build -f ./build/edge/Dockerfile --build-arg VERSION=v0.3.2 -t minghsu0107/specpipe-edge .
+	@docker build -f ./build/edge/Dockerfile --build-arg VERSION=$(VERSION) -t minghsu0107/specpipe-edge .
 clean:
 	$(GOCLEAN)
 	rm -f sp-server sp-edge

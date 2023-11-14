@@ -72,7 +72,7 @@ sudo make && sudo make install
 
 ```bash
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
-make docker
+make docker VERSION=0.0.1
 ```
 ### Deployment
 
