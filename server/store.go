@@ -46,11 +46,14 @@ func (s *Store) GetDevice(ctx context.Context, sdrType common.SDRType, deviceNam
 }
 
 func (s *Store) GetDevices(ctx context.Context, sdrType common.SDRType) ([]common.Device, error) {
+	devices := []common.Device{}
 	keys, err := s.kv.Keys(ctx)
 	if err != nil {
+		if errors.Is(err, jetstream.ErrKeyNotFound) {
+			return devices, nil
+		}
 		return nil, err
 	}
-	devices := []common.Device{}
 	for _, key := range keys {
 		exist, device, err := s.GetDevice(ctx, sdrType, common.DeviceNameFromKey(key))
 		if err != nil {
