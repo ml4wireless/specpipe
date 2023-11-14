@@ -12,22 +12,22 @@ import (
 	"github.com/ml4wireless/specpipe/common"
 )
 
-func CaptureAudio(ctx context.Context, config *Config, publisher message.Publisher, logger common.EdgeLogrus) error {
-	if config.Rtlsdr.Fm.Freq == "" {
+func CaptureAudio(ctx context.Context, config *FmConfig, publisher message.Publisher, logger common.EdgeLogrus) error {
+	if config.Rtlsdr.Freq == "" {
 		return ErrEmptyFreq
 	}
-	if config.Rtlsdr.Fm.SampleRate == "" {
+	if config.Rtlsdr.SampleRate == "" {
 		return ErrEmptySampleRate
 	}
-	if config.Rtlsdr.Fm.ResampleRate == "" {
+	if config.Rtlsdr.ResampleRate == "" {
 		return ErrEmptyReampleRate
 	}
-	cmd := exec.Command("rtl_fm", "-M", "fm", "-s", config.Rtlsdr.Fm.SampleRate, "-o", "4", "-A", "fast", "-r", config.Rtlsdr.Fm.ResampleRate, "-l", "0", "-E", "deemp", "-f", config.Rtlsdr.Fm.Freq)
+	cmd := exec.Command("rtl_fm", "-M", "fm", "-s", config.Rtlsdr.SampleRate, "-o", "4", "-A", "fast", "-r", config.Rtlsdr.ResampleRate, "-l", "0", "-E", "deemp", "-f", config.Rtlsdr.Freq)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return err
 	}
-	cmd.Env = append(cmd.Env, "RTLSDR_RPC_IS_ENABLED=1", "RTLSDR_RPC_SERV_ADDR="+config.Rtlsdr.RpcServerAddr, "RTLSDR_RPC_SERV_PORT="+config.Rtlsdr.RpcServerPort)
+	cmd.Env = append(cmd.Env, "RTLSDR_RPC_IS_ENABLED=1", "RTLSDR_RPC_SERV_ADDR="+config.Rtlsdr.Rpc.ServerAddr, "RTLSDR_RPC_SERV_PORT="+config.Rtlsdr.Rpc.ServerPort)
 	if err := cmd.Start(); err != nil {
 		return err
 	}

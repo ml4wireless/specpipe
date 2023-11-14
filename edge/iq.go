@@ -12,19 +12,19 @@ import (
 	"github.com/ml4wireless/specpipe/common"
 )
 
-func CaptureIQ(ctx context.Context, config *Config, publisher message.Publisher, logger common.EdgeLogrus) error {
-	if config.Rtlsdr.Iq.Freq == "" {
+func CaptureIQ(ctx context.Context, config *IqConfig, publisher message.Publisher, logger common.EdgeLogrus) error {
+	if config.Rtlsdr.Freq == "" {
 		return ErrEmptyFreq
 	}
-	if config.Rtlsdr.Iq.SampleRate == "" {
+	if config.Rtlsdr.SampleRate == "" {
 		return ErrEmptySampleRate
 	}
-	cmd := exec.Command("rtl_sdr", "-s", config.Rtlsdr.Iq.SampleRate, "-f", config.Rtlsdr.Iq.Freq, "-b", "262144", "-")
+	cmd := exec.Command("rtl_sdr", "-s", config.Rtlsdr.SampleRate, "-f", config.Rtlsdr.Freq, "-b", "262144", "-")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return err
 	}
-	cmd.Env = append(cmd.Env, "RTLSDR_RPC_IS_ENABLED=1", "RTLSDR_RPC_SERV_ADDR="+config.Rtlsdr.RpcServerAddr, "RTLSDR_RPC_SERV_PORT="+config.Rtlsdr.RpcServerPort)
+	cmd.Env = append(cmd.Env, "RTLSDR_RPC_IS_ENABLED=1", "RTLSDR_RPC_SERV_ADDR="+config.Rtlsdr.Rpc.ServerAddr, "RTLSDR_RPC_SERV_PORT="+config.Rtlsdr.Rpc.ServerPort)
 	if err := cmd.Start(); err != nil {
 		return err
 	}

@@ -21,7 +21,7 @@ var iqCmd = &cobra.Command{
 	Use:   "iq",
 	Short: "IQ data capturer",
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := edge.NewConfig(common.IQ)
+		config, err := edge.NewIqConfig()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -52,8 +52,8 @@ var iqCmd = &cobra.Command{
 		}
 		deviceInfo := common.IQDevice{
 			Name:       config.Device.Name,
-			Freq:       config.Rtlsdr.Iq.Freq,
-			SampleRate: config.Rtlsdr.Iq.SampleRate,
+			Freq:       config.Rtlsdr.Freq,
+			SampleRate: config.Rtlsdr.SampleRate,
 			Latitude:   config.Device.Latitude,
 			Longitude:  config.Device.Longitude,
 		}
@@ -103,10 +103,10 @@ var iqCmd = &cobra.Command{
 					}
 					subCancel()
 
-					config.Rtlsdr.Iq.Freq = newIqDevice.Freq
-					config.Rtlsdr.Iq.SampleRate = newIqDevice.SampleRate
+					config.Rtlsdr.Freq = newIqDevice.Freq
+					config.Rtlsdr.SampleRate = newIqDevice.SampleRate
 
-					logger.Infof("device %s tuned to frequency=%s sampling_rate=%s", config.Device.Name, config.Rtlsdr.Iq.Freq, config.Rtlsdr.Iq.SampleRate)
+					logger.Infof("device %s tuned to frequency=%s sampling_rate=%s", config.Device.Name, config.Rtlsdr.Freq, config.Rtlsdr.SampleRate)
 					subCtx, subCancel = context.WithCancel(ctx)
 					go func() {
 						if err := edge.CaptureIQ(subCtx, config, publisher, logger); err != nil {
@@ -131,32 +131,32 @@ func init() {
 	rootCmd.AddCommand(iqCmd)
 
 	iqCmd.Flags().StringP("device-name", "", "", "device name")
-	viper.BindPFlag("device.name", iqCmd.Flags().Lookup("device-name"))
+	viper.BindPFlag("iq.device.name", iqCmd.Flags().Lookup("device-name"))
 
 	iqCmd.Flags().StringP("device-latitude", "", "", "device latitude")
-	viper.BindPFlag("device.latitude", iqCmd.Flags().Lookup("device-latitude"))
+	viper.BindPFlag("iq.device.latitude", iqCmd.Flags().Lookup("device-latitude"))
 
 	iqCmd.Flags().StringP("device-longitude", "", "", "device longitude")
-	viper.BindPFlag("device.longitude", iqCmd.Flags().Lookup("device-longitude"))
+	viper.BindPFlag("iq.device.longitude", iqCmd.Flags().Lookup("device-longitude"))
 
 	iqCmd.Flags().StringP("freq", "", "", "frequency")
-	viper.BindPFlag("rtlsdr.iq.freq", iqCmd.Flags().Lookup("freq"))
+	viper.BindPFlag("iq.rtlsdr.freq", iqCmd.Flags().Lookup("freq"))
 
 	iqCmd.Flags().StringP("sample-rate", "", "", "sampling rate")
-	viper.BindPFlag("rtlsdr.iq.sampleRate", iqCmd.Flags().Lookup("sample-rate"))
+	viper.BindPFlag("iq.rtlsdr.sampleRate", iqCmd.Flags().Lookup("sample-rate"))
 
 	iqCmd.Flags().StringP("rpc-server-addr", "", "", "rtlsdr rpc server address")
-	viper.BindPFlag("rtlsdr.rpcServerAddr", iqCmd.Flags().Lookup("rpc-server-addr"))
+	viper.BindPFlag("iq.rtlsdr.rpc.serverAddr", iqCmd.Flags().Lookup("rpc-server-addr"))
 
 	iqCmd.Flags().StringP("rpc-server-port", "", "", "rtlsdr rpc server port")
-	viper.BindPFlag("rtlsdr.rpcServerPort", iqCmd.Flags().Lookup("rpc-server-port"))
+	viper.BindPFlag("iq.rtlsdr.rpc.serverPort", iqCmd.Flags().Lookup("rpc-server-port"))
 
 	iqCmd.Flags().StringP("nats-url", "", "", "NATS URL")
-	viper.BindPFlag("nats.url", iqCmd.Flags().Lookup("nats-url"))
+	viper.BindPFlag("iq.nats.url", iqCmd.Flags().Lookup("nats-url"))
 
 	iqCmd.Flags().StringP("nats-subject", "", "", "NATS subject")
-	viper.BindPFlag("nats.subject", iqCmd.Flags().Lookup("nats-subject"))
+	viper.BindPFlag("iq.nats.subject", iqCmd.Flags().Lookup("nats-subject"))
 
 	iqCmd.Flags().StringP("log-level", "", "", "log level")
-	viper.BindPFlag("logging.level", iqCmd.Flags().Lookup("log-level"))
+	viper.BindPFlag("iq.logging.level", iqCmd.Flags().Lookup("log-level"))
 }
