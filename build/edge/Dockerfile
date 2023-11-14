@@ -21,7 +21,7 @@ RUN apk --no-cache add alsa-utils libusb ca-certificates curl jq bash
 COPY --from=go_build /bin/sp-edge /bin/sp-edge
 COPY --from=rtl_build /usr/local/bin/rtl_test /bin/rtl_test
 COPY --from=rtl_build /usr/local/bin/rtl_fm /bin/rtl_fm
-COPY --from=rtl_build /usr/local/bin/rtl_power /bin/rtl_power
+COPY --from=rtl_build /usr/local/bin/rtl_sdr /bin/rtl_sdr
 COPY --from=rtl_build /usr/local/lib/librtlsdr.so.0 /usr/lib/librtlsdr.so.0
 RUN mkdir -p /app
 WORKDIR /app
