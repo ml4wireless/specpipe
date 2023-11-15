@@ -49,7 +49,7 @@ func (s *Store) GetDevices(ctx context.Context, sdrType common.SDRType) ([]commo
 	devices := []common.Device{}
 	keys, err := s.kv.Keys(ctx)
 	if err != nil {
-		if errors.Is(err, jetstream.ErrKeyNotFound) {
+		if errors.Is(err, jetstream.ErrNoKeysFound) {
 			return devices, nil
 		}
 		return nil, err
