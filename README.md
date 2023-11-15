@@ -86,7 +86,7 @@ Start a `rtl_rpcd` daemon on the host machine, which allows remote access of SDR
 RTLSDR_RPC_SERV_ADDR=127.0.0.1 RTLSDR_RPC_SERV_PORT=40000 rtl_rpcd >> rtlrpcd.log 2>&1 &
 ```
 
-Start NATS JetStream container and create stream `specpipe` and KV store `specpipe` respectively.
+Start NATS JetStream container and create stream `specpipe`, `specpipe-iq` and KV store `specpipe` respectively.
 
 ```bash
 docker-compose up -d
