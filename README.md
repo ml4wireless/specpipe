@@ -3,7 +3,11 @@ SpecPipe is an end-to-end distributed data pipeline that leverages software-defi
 - `sp-edge` - runs on edge devices, managing SDR hardware to capture spectrum data. It processes and streams the data to the cloud.
 - `sp-server` - provides a centralized control plane in the cloud to seamlessly orchestrate and manage edge devices at scale. It enables monitoring and management of devices and their data streams.
 
-The system is designed for efficient, resilient spectrum data collection and processing across distributed edge nodes.
+The system is designed for efficient, resilient spectrum data collection and processing across distributed edge nodes. It provides two main data pipelines:
+- IQ Data Pipeline: For high-throughput raw IQ data retrieved from the RF front-end. This pipeline produces large amounts of raw data, which is temporarily stored in the cloud.
+- Demodulated Data Pipeline: Has lower throughput for processed and demoulated data, saving bandwidth and storage compared to raw IQ data. Enables more cost-efficient data collection.
+
+The dual pipelines allow flexible handling of diverse spectrum data types and throughput requirements across the distributed network.
 
 Key Features:
 - Transparent - server tracks edge node status, performs health checks, and exposes REST APIs for node management.
