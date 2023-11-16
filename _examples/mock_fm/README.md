@@ -1,7 +1,10 @@
 # Mock Audio Streaming
 
 This example program streams the content of `mock_audio.wav` file to NATS JetStream circularly to simulate continuous audio collection. This allows creating mock audio data for testing without requiring an actual antenna or audio source. The circular streaming approach generates a continuous audio data source.
-
+## Docker Build
+```bash
+docker build -t minghsu0107/specpipe-audio-mock .
+```
 ## Usage
 First, start NATS JetStream container with proper configurations as shown in the [deployment section](../../README.md#deployment).
 
