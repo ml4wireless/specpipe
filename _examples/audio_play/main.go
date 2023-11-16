@@ -105,6 +105,7 @@ func main() {
 		}
 	}()
 
+	fmt.Printf("subscribing NATS subject %s\n", natsSubject)
 	for msg := range msgs {
 		fmt.Println("msg timestamp: ", msg.Metadata.Get("ts"))
 		audio := make([]byte, 2*8192)
