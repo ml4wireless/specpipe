@@ -114,7 +114,7 @@ docker run --rm -p 80:8888 -d minghsu0107/specpipe-server controller \
 Start the API server healthcheck routine.
 
 ```bash
-docker run --rm -p 80:8888 -d minghsu0107/specpipe-server health \
+docker run --rm -d minghsu0107/specpipe-server health \
     --nats-url=nats://mytoken@host.docker.internal:4222
 ```
 ### Cloud APIs
