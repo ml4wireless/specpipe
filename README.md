@@ -1,6 +1,7 @@
 # SpecPipe - Distributed Data Pipeline for Spectrum
-SpecPipe is an end-to-end distributed data pipeline that leverages software-defined radio (SDR) to capture, process, and stream radio spectrum data in near real-time. It consists of two core components:
-- `sp-edge` - runs on edge devices, managing SDR hardware to capture spectrum data. It processes and streams the data to the cloud.
+SpecPipe is an end-to-end distributed data pipeline that leverages software-defined radio (SDR) to capture, process, and stream radio spectrum data in near real-time. It consists of three primary components:
+- `rtl_rpcd` - runs on edge nodes, facilitating remote access to SDR hardware for `sp-edge`.
+- `sp-edge` - operates within containers on edge nodes, managing SDR hardware to capture spectrum data. It processes and streams the data to the cloud.
 - `sp-server` - provides a centralized control plane in the cloud to seamlessly orchestrate and manage edge devices at scale. It enables monitoring and management of devices and their data streams.
 
 The system is designed for efficient, resilient spectrum data collection and processing across distributed edge nodes. It provides two main data pipelines:
