@@ -5,10 +5,14 @@ import (
 )
 
 type Config struct {
-	Http      *HttpConfig      `mapstructure:"http"`
-	Nats      *NatsConfig      `mapstructure:"nats"`
-	Heartbeat *HeartbeatConfig `mapstructure:"heartbeat"`
-	Logging   *LoggingConfig   `mapstructure:"logging"`
+	Controller *ControllerConfig `mapstructure:"controller"`
+	Health     *HealthConfig     `mapstructure:"health"`
+}
+
+type ControllerConfig struct {
+	Http    *HttpConfig    `mapstructure:"http"`
+	Nats    *NatsConfig    `mapstructure:"nats"`
+	Logging *LoggingConfig `mapstructure:"logging"`
 }
 
 type HttpConfig struct {
@@ -19,27 +23,44 @@ type NatsConfig struct {
 	Url string
 }
 
-type HeartbeatConfig struct {
+type HealthConfig struct {
 	TimeoutSec int64
+	Nats       *NatsConfig    `mapstructure:"nats"`
+	Logging    *LoggingConfig `mapstructure:"logging"`
 }
 
 type LoggingConfig struct {
 	Level string
 }
 
-func setDefault() {
-	viper.SetDefault("http.serverPort", "8888")
-	viper.SetDefault("nats.url", "nats://127.0.0.1:4222")
-	viper.SetDefault("heartbeat.timeoutSec", 5)
-	viper.SetDefault("logging.level", "info")
+func setControllerConfigDefault() {
+	viper.SetDefault("controller.http.serverPort", "8888")
+	viper.SetDefault("controller.nats.url", "nats://127.0.0.1:4222")
+	viper.SetDefault("controller.logging.level", "info")
 }
 
-func NewConfig() (*Config, error) {
-	setDefault()
+func setHealthConfigDefault() {
+	viper.SetDefault("health.timeoutSec", 5)
+	viper.SetDefault("health.nats.url", "nats://127.0.0.1:4222")
+	viper.SetDefault("health.logging.level", "info")
+}
+
+func NewControllerConfig() (*ControllerConfig, error) {
+	setControllerConfigDefault()
 
 	var c Config
 	if err := viper.Unmarshal(&c); err != nil {
 		return nil, err
 	}
-	return &c, nil
+	return c.Controller, nil
+}
+
+func NewHealthConfig() (*HealthConfig, error) {
+	setHealthConfigDefault()
+
+	var c Config
+	if err := viper.Unmarshal(&c); err != nil {
+		return nil, err
+	}
+	return c.Health, nil
 }

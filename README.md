@@ -106,8 +106,15 @@ docker run --rm -d minghsu0107/specpipe-edge fm \
 Start the API server at `localhost:8888`, which serves as the control plane enabling viewing of registered services and management of device configurations.
 
 ```bash
-docker run --rm -p 80:8888 -d minghsu0107/specpipe-server \
+docker run --rm -p 80:8888 -d minghsu0107/specpipe-server controller \
     --http-server-port=8888 \
+    --nats-url=nats://mytoken@host.docker.internal:4222
+```
+
+Start the API server healthcheck routine.
+
+```bash
+docker run --rm -p 80:8888 -d minghsu0107/specpipe-server health \
     --nats-url=nats://mytoken@host.docker.internal:4222
 ```
 ### Cloud APIs
