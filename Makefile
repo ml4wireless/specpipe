@@ -4,7 +4,7 @@ GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOINSTALL=$(GOCMD) install
 
-VERSION=0.0.0
+VERSION=v0.0.0
 
 build: build-server build-edge
 build-server:
