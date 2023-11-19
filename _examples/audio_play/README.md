@@ -14,7 +14,7 @@ For OS X:
 brew install pkg-config portaudio
 ```
 ## Usage
-To run this example, first follow the deployment instructions in [README.md](../../README.md#deployment) to set up NATS JetStream, `sp-edge`, and `sp-server` locally.
+To run this example, first follow the deployment instructions in [README.md](../../README.md#deployment) to set up SpecPipe.
 
 Start the FM audio subscriber on your host machine to listen to the audio stream in real time. The subscriber will connect to the NATS JetStream container and play the FM audio processed by SpecPipe.
 ```bash
