@@ -79,13 +79,12 @@ func main() {
 	}
 
 	out := make([]int16, 8192)
-	// get audio format information
-	rate := 16000
+	rate := 32000
 
 	portaudio.Initialize()
 	defer portaudio.Terminate()
 	// stereo audio
-	stream, err := portaudio.OpenDefaultStream(0, 2, float64(rate), len(out), &out)
+	stream, err := portaudio.OpenDefaultStream(0, 1, float64(rate), len(out), &out)
 	if err != nil {
 		fmt.Println(err)
 		return
