@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"os"
 	"os/signal"
@@ -57,11 +56,7 @@ var iqCmd = &cobra.Command{
 			Latitude:   config.Device.Latitude,
 			Longitude:  config.Device.Longitude,
 		}
-		deviceInfoBytes, err := json.Marshal(deviceInfo)
-		if err != nil {
-			log.Fatal(err)
-		}
-		heartbeatSub, err := edge.RegisterDevice(regCtx, clusterConn, kv, common.IQ, config.Device.Name, deviceInfoBytes)
+		heartbeatSub, err := edge.RegisterDevice(regCtx, clusterConn, kv, common.IQ, config.Device.Name, &deviceInfo)
 		if err != nil {
 			log.Fatal(err)
 		}

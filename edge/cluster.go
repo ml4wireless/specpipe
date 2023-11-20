@@ -9,8 +9,12 @@ import (
 	"github.com/nats-io/nats.go/jetstream"
 )
 
-func RegisterDevice(ctx context.Context, conn *nats.Conn, kv jetstream.KeyValue, sdrType common.SDRType, deviceName string, deviceInfo []byte) (*nats.Subscription, error) {
-	_, err := kv.Put(ctx, common.KVStoreKey(sdrType, deviceName), deviceInfo)
+func RegisterDevice(ctx context.Context, conn *nats.Conn, kv jetstream.KeyValue, sdrType common.SDRType, deviceName string, deviceInfo common.Device) (*nats.Subscription, error) {
+	deviceInfoBytes, err := json.Marshal(deviceInfo)
+	if err != nil {
+		return nil, err
+	}
+	_, err = kv.Put(ctx, common.KVStoreKey(sdrType, deviceName), deviceInfoBytes)
 	if err != nil {
 		return nil, err
 	}

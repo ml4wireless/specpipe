@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"os"
 	"os/signal"
@@ -51,17 +50,14 @@ var fmCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 		deviceInfo := common.FMDevice{
-			Name:       config.Device.Name,
-			Freq:       config.Rtlsdr.Freq,
-			SampleRate: config.Rtlsdr.SampleRate,
-			Latitude:   config.Device.Latitude,
-			Longitude:  config.Device.Longitude,
+			Name:         config.Device.Name,
+			Freq:         config.Rtlsdr.Freq,
+			SampleRate:   config.Rtlsdr.SampleRate,
+			ResampleRate: config.Rtlsdr.ResampleRate,
+			Latitude:     config.Device.Latitude,
+			Longitude:    config.Device.Longitude,
 		}
-		deviceInfoBytes, err := json.Marshal(deviceInfo)
-		if err != nil {
-			log.Fatal(err)
-		}
-		heartbeatSub, err := edge.RegisterDevice(regCtx, clusterConn, kv, common.FM, config.Device.Name, deviceInfoBytes)
+		heartbeatSub, err := edge.RegisterDevice(regCtx, clusterConn, kv, common.FM, config.Device.Name, &deviceInfo)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -105,6 +101,7 @@ var fmCmd = &cobra.Command{
 
 					config.Rtlsdr.Freq = newFmDevice.Freq
 					config.Rtlsdr.SampleRate = newFmDevice.SampleRate
+					config.Rtlsdr.ResampleRate = newFmDevice.ResampleRate
 
 					logger.Infof("device %s tuned to frequency=%s sampling_rate=%s", config.Device.Name, config.Rtlsdr.Freq, config.Rtlsdr.SampleRate)
 					subCtx, subCancel = context.WithCancel(ctx)

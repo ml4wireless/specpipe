@@ -26,11 +26,12 @@ type ErrorResponse struct {
 
 // FmDevice defines model for fm_device.
 type FmDevice struct {
-	Freq       string  `json:"freq"`
-	Latitude   float32 `json:"latitude"`
-	Longitude  float32 `json:"longitude"`
-	Name       string  `json:"name"`
-	SampleRate string  `json:"sample_rate"`
+	Freq         string  `json:"freq"`
+	Latitude     float32 `json:"latitude"`
+	Longitude    float32 `json:"longitude"`
+	Name         string  `json:"name"`
+	ResampleRate string  `json:"resample_rate"`
+	SampleRate   string  `json:"sample_rate"`
 }
 
 // FmDeviceResponse defines model for fm_device_response.
@@ -64,8 +65,9 @@ type IqDevicesResponse struct {
 
 // UpdateFmDeviceRequest defines model for update_fm_device_request.
 type UpdateFmDeviceRequest struct {
-	Freq       string  `json:"freq"`
-	SampleRate *string `json:"sample_rate,omitempty"`
+	Freq         string  `json:"freq"`
+	ResampleRate *string `json:"resample_rate,omitempty"`
+	SampleRate   *string `json:"sample_rate,omitempty"`
 }
 
 // UpdateIqDeviceRequest defines model for update_iq_device_request.
@@ -271,19 +273,19 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+xXW28aPRD9K6v5vscVi5L0Zd8apalQbzRRn6oIOetZ4mh9wZ5FQoj/XtnLXpJsUsgF",
-	"kYonLDOeOT5zxgeWkGlptEJFDtIluOwGJQtLtFbbiUVntHLodxjngoRWrBhbbdCSQAdpzgqHMZjO1hI4",
-	"EhOFX9HCIKTgyAo1hVUMJKjAnm9WMViclcIih/R3naGOv4rreH19ixn5TLmccJyLbFtwucVZL7SCkaCS",
-	"h3y5tpIRpJAXmhE05VUpr9GGaK2mW4QrJrG3qmPSFDixjDagJWDvIO3CWNe4m/FJ4p7f3pr2/y3mkMJ/",
-	"SaujZC2ipO3Pw+aG7SexuZeBC0tBKN0WMBs8zFq2eAS268UtZgcxPkuMDXFvK8a2P1uIsTm0MzF2YL5A",
-	"jKXhjHDSnfNZiY5eS5vbq+QJlF0B7B1KHyZUrkOCyrng0mA2FgajS7RztNHH8QhimKN1QitIYTg4Hhx5",
-	"ANqgYkZACseD4WAIMRhGNwF0ksuko40phlv7azF/7RGHFD4jncuzdZBHWykwHDgaDv1HphWhqhgzphBZ",
-	"OJ3cOg+ktvONH8COysPFObrMCkPVtX588Xf68IqF7/3E6Kk5UoRWsaKm+pM/EXrnSimZXUAKX4Wj6Pxb",
-	"xBumiE1dd7J9fIfwZFkt/AO12oj9syY+9NAyiYTW11jeA1xljtahwm/5ntfPYR2w/r4VINkS4w5t98V6",
-	"tYv+b9D+k522/5Tx6KJ6FFxV/WSH1b9ris51qfh+6v4CGW91H2Va5WJaVgruG4IYTNmj83G5dzoPDT/V",
-	"fPFqjD9qiKu7PuDhrQ6jdhi1u6P2K8inHbbHPEbMNjH10WwHpt730/W9mfro599MvSV8Y1Nv2P+3Tb3n",
-	"b9XhpXknpt7o/iWmvm86fzNTf/j/ccemfhi192zqzbD1eow/EVJU81LaAlJI5kNYXa3+BAAA///J25q/",
-	"PRcAAA==",
+	"H4sIAAAAAAAC/+xXT2/bPgz9KgZ/v6MRe1t38W1F1yHYv6zFTkMRqBadqrAlRaIDBIG/+yA5dtzUTZM1",
+	"DdoipwgKJT6Sj3zyAlJVaCVRkoVkATa9wYL5JRqjzNig1UpadDuMc0FCSZaPjNJoSKCFJGO5xRB0Z2sB",
+	"HImJ3K1orhESsGSEnEAVAgnKseefKgSD01IY5JD8aW5o7K/Cxl5d32JK7qasGHOciXRXcJnBaS+0nJGg",
+	"kvv7MmUKRpBAlitG0LqXZXGNxlsrOdnBXLICe70atKzQOY4No36Lzf+vJc5H14mlC3SJYt3nXQ8bU/3v",
+	"hGgK9b/BDBL4L1oxL1rSLlpV9D4d/PZGbPZp4PxSEBZ2B5gtHmYMmz8A2/biFtM3Qd/9k/MxMraJe14y",
+	"ruqzAxnbQwcjYwfmE8hYas4Ix90+n5ZoaV/cfI4htyGOLkX2Gsc+UDozITPlL6jVEC41piOhMbhEM0MT",
+	"fBoNIYQZGiuUhATiQTx45wAojZJpAQl8GMSDGELQjG486Cgrog57JuijdmExF/aQQwJfkM6Ls6WRL4vn",
+	"qD/wPo7dT6okoawzpnUuUn86urUOSPNE2HpEdvrAB87RpkZoqsP6+dXF9HGPjteeLT0+h5LQSJY3qf7s",
+	"Tvja2bIomJlDAt+EpeD8e8DbTBGb2G7vO/tOwqNFvXAjrNoq+2etva+hYQUSGudjsQa4vjlYmgq35Wre",
+	"DMzGoJX2hoBkSgw7aVsn69Uh6r9F+U8OWv5TxoOLeijY2vvJAb3/UBScq1Lyl8n7C2R8xfsgVTITk7Jm",
+	"cF8ThKDLHp6PyhfHc1/wU8Xne8v4g5JZ3dUBB686ttqx1e622m9Pn1WzPaQxYrqNqA+nBxD1vsftaxP1",
+	"4a/HRH2V8K1Fvc3+2xb1ng+v46R5JaLe8v4pov7SeP5son7/+/HAon5stdcs6m2z9WqMO+GvqPulNDkk",
+	"EM1iqK6qvwEAAP//IoUgcJEXAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

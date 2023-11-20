@@ -31,11 +31,12 @@ func (s *SpecpipeServer) GetFmDevices(c *gin.Context) {
 			return
 		}
 		fmDevicesPresenter = append(fmDevicesPresenter, FmDevice{
-			Freq:       fmDevice.Freq,
-			Latitude:   fmDevice.Latitude,
-			Longitude:  fmDevice.Longitude,
-			Name:       fmDevice.Name,
-			SampleRate: fmDevice.SampleRate,
+			Freq:         fmDevice.Freq,
+			Latitude:     fmDevice.Latitude,
+			Longitude:    fmDevice.Longitude,
+			Name:         fmDevice.Name,
+			SampleRate:   fmDevice.SampleRate,
+			ResampleRate: fmDevice.ResampleRate,
 		})
 	}
 	c.JSON(http.StatusOK, &FmDevicesResponse{
@@ -59,11 +60,12 @@ func (s *SpecpipeServer) GetFmDevicesDevicename(c *gin.Context, deviceName strin
 	}
 	c.JSON(http.StatusOK, &FmDeviceResponse{
 		Device: FmDevice{
-			Freq:       fmDevice.Freq,
-			Latitude:   fmDevice.Latitude,
-			Longitude:  fmDevice.Longitude,
-			Name:       fmDevice.Name,
-			SampleRate: fmDevice.SampleRate,
+			Freq:         fmDevice.Freq,
+			Latitude:     fmDevice.Latitude,
+			Longitude:    fmDevice.Longitude,
+			Name:         fmDevice.Name,
+			SampleRate:   fmDevice.SampleRate,
+			ResampleRate: fmDevice.ResampleRate,
 		},
 	})
 }
@@ -92,6 +94,9 @@ func (s *SpecpipeServer) PutFmDevicesDevicename(c *gin.Context, deviceName strin
 	if updateFmDeviceRequest.SampleRate != nil {
 		fmDevice.SampleRate = *updateFmDeviceRequest.SampleRate
 	}
+	if updateFmDeviceRequest.ResampleRate != nil {
+		fmDevice.ResampleRate = *updateFmDeviceRequest.ResampleRate
+	}
 	if err = s.store.UpdateDevice(c.Request.Context(), common.FM, deviceName, fmDevice); err != nil {
 		errorHandler(c, fmt.Errorf("update fm device error: %w", err), http.StatusInternalServerError)
 		return
@@ -99,11 +104,12 @@ func (s *SpecpipeServer) PutFmDevicesDevicename(c *gin.Context, deviceName strin
 
 	c.JSON(http.StatusOK, &FmDeviceResponse{
 		Device: FmDevice{
-			Freq:       fmDevice.Freq,
-			Latitude:   fmDevice.Latitude,
-			Longitude:  fmDevice.Longitude,
-			Name:       fmDevice.Name,
-			SampleRate: fmDevice.SampleRate,
+			Freq:         fmDevice.Freq,
+			Latitude:     fmDevice.Latitude,
+			Longitude:    fmDevice.Longitude,
+			Name:         fmDevice.Name,
+			SampleRate:   fmDevice.SampleRate,
+			ResampleRate: fmDevice.ResampleRate,
 		},
 	})
 }
