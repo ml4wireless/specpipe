@@ -74,7 +74,7 @@ cmake -DCMAKE_HOST_SYSTEM_PROCESSOR:STRING=arm64 -DLIBUSB_INCLUDE_DIR=/usr/local
 sudo make && sudo make install
 ```
 ### Build Docker Image
-
+Building the Docker images locally is optional since prebuilt images are available on DockerHub. However, you can still execute the following command under the project root to build the Docker images locally if preferred:
 ```bash
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 make docker VERSION=v0.1.0
@@ -90,6 +90,7 @@ RTLSDR_RPC_SERV_ADDR=127.0.0.1 RTLSDR_RPC_SERV_PORT=40000 rtl_rpcd >> rtlrpcd.lo
 Start NATS JetStream container and create stream `specpipe`, `specpipe-iq` and KV store `specpipe` respectively.
 
 ```bash
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
 docker-compose up -d
 ```
 Run `specpipe-edge` container, which retrieves raw data remotely from the `rtl_rpcd` daemon on the host machine and streams demodulized data to JetStream (take `fm` as example).
