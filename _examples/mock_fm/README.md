@@ -10,7 +10,7 @@ First, start NATS JetStream container with proper configurations as shown in the
 
 To simulate an FM device named `dev1` streaming audio to NATS JetStream:
 ```bash
-NATS_URL="nats://mytoken@127.0.0.1:4222" DEVICE="dev1" go run main.go 
+NATS_URL="nats://mytoken@127.0.0.1:4222" DEVICE="dev1" go run main.go mock_audio.wav
 ```
 You can also run in Docker:
 ```bash
