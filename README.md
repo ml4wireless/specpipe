@@ -148,3 +148,11 @@ You could optionally run the Swagger UI to view all APIs in your browser at `htt
 ```bash
 docker run --rm -d -p 5555:8080 -e API_URL=api/main.yaml -v $(PWD)/server/openapi:/usr/share/nginx/html/api swaggerapi/swagger-ui
 ```
+### NATS JetStream Subjects
+- Demodulated data pipeline: `specpipe.data.<sdr_type>.<device_name>`
+  - Supported SDR types: `iq`, `fm`
+- IQ data pipeline: `specpipe-iq.data.iq.<device_name>`
+- Cluster commands: `specpipe-cluster.<sdr_type>.<device_name>.<cmd>`
+  - Supported commands:
+    - `health` - For health checks
+    - `watchcfg` - For dynamic configuration
