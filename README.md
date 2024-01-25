@@ -19,62 +19,77 @@ Key Features:
 - Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
 - Lightweight - small binaries with low memory footprint.
 ## Getting Started
-### Install Dependencies
-In order to extract raw data from the SDR hardware, the `librtlsdr` binaries have to be installed on the host machine.
+### Install Dependencies for librtlsdr
+In order to extract raw data from the SDR hardware, the `librtlsdr` binaries have to be installed on the host machine. Before we install these binaries, we need to install `gcc`, `g++`, `make`, `cmake` and `libusb`.
 
-First, have `gcc`, `g++`, and `make` installed. 
-
+#### For Linux Users
 ```bash
 sudo apt-get update
-sudo apt-get -y install build-essential
+sudo apt-get -y install build-essential cmake libusb-1.0-0-dev
 ```
 
-Then install `cmake` and `libusb`.
-
-```bash
-sudo apt-get -y install cmake libusb-1.0-0-dev
-```
-
-Next, build and install `librtlsdr` binaries and libraries.
-
-```bash
-git clone https://github.com/minghsu0107/librtlsdr
-cd librtlsdr
-mkdir build && cd build
-cmake ../
-sudo make && sudo make install
-```
-After building and installing librtlsdr, the files are located in the following directories:
-- Header files are installed to `/usr/local/include`
-- Library files are installed to `/usr/local/lib`
-- Executable binaries are installed to `/usr/local/bin`
-#### For Mac Users (Apple Chips)
+#### For Mac Users using Apple silicon
 Install  `cmake` and `libusb` via Homebrew.
 ```bash
 brew install cmake libusb
 ```
-Check the version and library paths of `libusb`.
+Find the version and library paths of `libusb` so that they can be used in the next step
 ```bash
 brew ls libusb
 ```
-Build and install the librtlsdr binaries and libraries, setting the appropriate configuration and library paths for the system. For example, on Mac M2 with `libusb` version `1.0.26`:
+The two paths that we will need here are:
+1) The path to the folder that contains `libusb.h` e.g.
+```
+/opt/homebrew/Cellar/libusb/1.0.26/include/libusb-1.0
+```
+2) The path to the `.dylib` file e.g.
+```
+/opt/homebrew/Cellar/libusb/1.0.26/lib/libusb-1.0.0.dylib
+```
+
+
+### Install librtlsdr
+Build and install the librtlsdr binaries and libraries
+
+#### Setup for installing librtlsdr
+
 ```bash
 git clone https://github.com/minghsu0107/librtlsdr
 cd librtlsdr
-mkdir build && cd build
+mkdir build && cd build```
+```
+
+#### For Linux Users
+```bash
+cmake ../
+sudo make && sudo make install
+```
+#### For Mac Users using Apple silicon
+We need to set the appropriate configuration and library paths for the system when calling `cmake`. Specifically, we'll need to set the options:
+1) `DLIBUSB_INCLUDE_DIR` to the path to the folder that contains `libusb.h` found above
+2) `DLIBUSB_LIBRARY` to the path to the `.dylib` file found above
+
+For Mac M2, an example command is:
+
+```bash
 cmake -DCMAKE_HOST_SYSTEM_PROCESSOR:STRING=arm64 -DLIBUSB_INCLUDE_DIR=/opt/homebrew/Cellar/libusb/1.0.26/include/libusb-1.0 -DLIBUSB_LIBRARY=/opt/homebrew/lib/libusb-1.0.dylib ../
 sudo make && sudo make install
 ```
-Another example when using Mac M1 with `libusb` version `1.0.26`:
+
+For Mac M1, an example command is the following. Note that the path to the libusb-1.0 is different for the machines.
 ```bash
-git clone https://github.com/minghsu0107/librtlsdr
-cd librtlsdr
-mkdir build && cd build
 cmake -DCMAKE_HOST_SYSTEM_PROCESSOR:STRING=arm64 -DLIBUSB_INCLUDE_DIR=/usr/local/Cellar/libusb/1.0.26/include/libusb-1.0 -DLIBUSB_LIBRARY=/usr/local/lib/libusb-1.0.dylib ../
 sudo make && sudo make install
 ```
-### Build Docker Image
-Building the Docker images locally is optional since prebuilt images are available on DockerHub. However, you can still execute the following command under the project root to build the Docker images locally if preferred:
+
+After building and installing librtlsdr, the files are located in the following directories:
+- Header files are installed to `/usr/local/include`
+- Library files are installed to `/usr/local/lib`
+- Executable binaries are installed to `/usr/local/bin`
+
+### Build Docker Image (Optional)
+Building the Docker images locally is optional since prebuilt images are available on DockerHub.
+Navigate to the root of the `specpipe` project and build the docker image.
 ```bash
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 make docker VERSION=v0.1.0
