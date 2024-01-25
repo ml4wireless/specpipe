@@ -25,7 +25,7 @@ In order to extract raw data from the SDR hardware, the `librtlsdr` binaries hav
 #### For Linux Users
 ```bash
 sudo apt-get update
-sudo apt-get -y install build-essential cmake libusb
+sudo apt-get -y install build-essential cmake libusb-1.0-0-dev
 ```
 
 #### For Mac Users using Apple silicon
@@ -51,11 +51,16 @@ The two paths that we will need here are:
 ### Install librtlsdr
 Build and install the librtlsdr binaries and libraries
 
-#### For Linux Users
+#### Setup for installing librtlsdr
+
 ```bash
 git clone https://github.com/minghsu0107/librtlsdr
 cd librtlsdr
-mkdir build && cd build
+mkdir build && cd build```
+```
+
+#### For Linux Users
+```bash
 cmake ../
 sudo make && sudo make install
 ```
@@ -64,15 +69,23 @@ We need to set the appropriate configuration and library paths for the system wh
 1) `DLIBUSB_INCLUDE_DIR` to the path to the folder that contains `libusb.h` found above
 2) `DLIBUSB_LIBRARY` to the path to the `.dylib` file found above
 
-An example of such a command is the following.
+For Mac M2, an example command is:
 
 ```bash
-git clone https://github.com/minghsu0107/librtlsdr
-cd librtlsdr
-mkdir build && cd build
 cmake -DCMAKE_HOST_SYSTEM_PROCESSOR:STRING=arm64 -DLIBUSB_INCLUDE_DIR=/opt/homebrew/Cellar/libusb/1.0.26/include/libusb-1.0 -DLIBUSB_LIBRARY=/opt/homebrew/lib/libusb-1.0.dylib ../
 sudo make && sudo make install
 ```
+
+For Mac M1, an example command is the following. Note that the path to the libusb-1.0 is different for the machines.
+```bash
+cmake -DCMAKE_HOST_SYSTEM_PROCESSOR:STRING=arm64 -DLIBUSB_INCLUDE_DIR=/usr/local/Cellar/libusb/1.0.26/include/libusb-1.0 -DLIBUSB_LIBRARY=/usr/local/lib/libusb-1.0.dylib ../
+sudo make && sudo make install
+```
+
+After building and installing librtlsdr, the files are located in the following directories:
+- Header files are installed to `/usr/local/include`
+- Library files are installed to `/usr/local/lib`
+- Executable binaries are installed to `/usr/local/bin`
 
 ### Build Docker Image (Optional)
 Building the Docker images locally is optional since prebuilt images are available on DockerHub.
