@@ -56,7 +56,7 @@ Build and install the librtlsdr binaries and libraries
 ```bash
 git clone https://github.com/minghsu0107/librtlsdr
 cd librtlsdr
-mkdir build && cd build```
+mkdir build && cd build
 ```
 
 #### For Linux Users
