@@ -108,7 +108,7 @@ Start NATS JetStream container and create stream `specpipe`, `specpipe-iq` and K
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 docker-compose up -d
 ```
-Run `specpipe-edge` container, which retrieves raw data remotely from the `rtl_rpcd` daemon on the host machine and streams demodulized data to JetStream (take `fm` as example).
+Run `specpipe-edge` container, which retrieves raw data remotely from the `rtl_rpcd` daemon on the host machine and streams demoulated data to JetStream (take `fm` as example).
 
 ```bash
 docker run --rm -d minghsu0107/specpipe-edge fm \
