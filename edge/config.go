@@ -7,8 +7,9 @@ import (
 )
 
 type Config struct {
-	Fm *FmConfig `mapstructure:"fm"`
-	Iq *IqConfig `mapstructure:"iq"`
+	Fm      *FmConfig      `mapstructure:"fm"`
+	Iq      *IqConfig      `mapstructure:"iq"`
+	Forward *ForwardConfig `mapstructure:"forward"`
 }
 
 type FmConfig struct {
@@ -23,6 +24,18 @@ type IqConfig struct {
 	Rtlsdr  *RtlsdrIqConfig `mapstructure:"rtlsdr"`
 	Nats    *NatsConfig     `mapstructure:"nats"`
 	Logging *LoggingConfig  `mapstructure:"logging"`
+}
+
+type ForwardConfig struct {
+	Device  *DeviceConfig   `mapstructure:"device"`
+	Rtlsdr  *RtlsdrIqConfig `mapstructure:"rtlsdr"`
+	Grpc    *GrpcConfig     `mapstructure:"grpc"`
+	Nats    *NatsConfig     `mapstructure:"nats"`
+	Logging *LoggingConfig  `mapstructure:"logging"`
+}
+
+type GrpcConfig struct {
+	Target string
 }
 
 type DeviceConfig struct {
@@ -91,6 +104,23 @@ func setIqConfigDefault() {
 	viper.SetDefault("iq.logging.level", "info")
 }
 
+func setForwardConfigDefault() {
+	viper.SetDefault("forward.grpc.target", "localhost:50051")
+
+	viper.SetDefault("forward.device.name", watermill.NewShortUUID())
+	viper.SetDefault("forward.device.latitude", 0.0)
+	viper.SetDefault("forward.device.longitude", 0.0)
+
+	viper.SetDefault("forward.rtlsdr.freq", "")
+	viper.SetDefault("forward.rtlsdr.sampleRate", "2048000")
+	viper.SetDefault("forward.rtlsdr.rpc.serverAddr", "127.0.0.1")
+	viper.SetDefault("forward.rtlsdr.rpc.serverPort", "40000")
+
+	viper.SetDefault("forward.nats.url", "nats://127.0.0.1:4222")
+
+	viper.SetDefault("forward.logging.level", "info")
+}
+
 func NewFmConfig() (*FmConfig, error) {
 	setFmConfigDefault()
 
@@ -115,4 +145,14 @@ func NewIqConfig() (*IqConfig, error) {
 		c.Iq.Nats.Subject = common.DataSubject(common.IQ, c.Iq.Device.Name)
 	}
 	return c.Iq, nil
+}
+
+func NewForwardConfig() (*ForwardConfig, error) {
+	setForwardConfigDefault()
+
+	var c Config
+	if err := viper.Unmarshal(&c); err != nil {
+		return nil, err
+	}
+	return c.Forward, nil
 }
