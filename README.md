@@ -18,6 +18,11 @@ Key Features:
 - Portable - packages complex dependencies into a single container for easy edge deployment.
 - Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
 - Lightweight - small binaries with low memory footprint.
+
+## System Architecture
+
+<img width="1200" alt="system_architecture" src="images/system_architecture.png">
+
 ## Getting Started
 ### Install Dependencies for librtlsdr
 In order to extract raw data from the SDR hardware, the `librtlsdr` binaries have to be installed on the host machine. Before we install these binaries, we need to install `gcc`, `g++`, `make`, `cmake` and `libusb`.
