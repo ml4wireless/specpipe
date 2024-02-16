@@ -50,11 +50,14 @@ var iqCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 		deviceInfo := common.IQDevice{
-			Name:       config.Device.Name,
-			Freq:       config.Rtlsdr.Freq,
-			SampleRate: config.Rtlsdr.SampleRate,
-			Latitude:   config.Device.Latitude,
-			Longitude:  config.Device.Longitude,
+			RegisterTs:      time.Now().UnixMilli(),
+			SpecpipeVersion: Version,
+			Name:            config.Device.Name,
+			Freq:            config.Rtlsdr.Freq,
+			SampleRate:      config.Rtlsdr.SampleRate,
+			Latitude:        config.Device.Latitude,
+			Longitude:       config.Device.Longitude,
+			Forward:         false,
 		}
 		heartbeatSub, err := edge.RegisterDevice(regCtx, clusterConn, kv, common.IQ, config.Device.Name, &deviceInfo)
 		if err != nil {

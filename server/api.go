@@ -31,12 +31,14 @@ func (s *SpecpipeServer) GetFmDevices(c *gin.Context) {
 			return
 		}
 		fmDevicesPresenter = append(fmDevicesPresenter, FmDevice{
-			Freq:         fmDevice.Freq,
-			Latitude:     fmDevice.Latitude,
-			Longitude:    fmDevice.Longitude,
-			Name:         fmDevice.Name,
-			SampleRate:   fmDevice.SampleRate,
-			ResampleRate: fmDevice.ResampleRate,
+			Freq:            fmDevice.Freq,
+			Latitude:        fmDevice.Latitude,
+			Longitude:       fmDevice.Longitude,
+			Name:            fmDevice.Name,
+			RegisterTs:      fmDevice.RegisterTs,
+			SampleRate:      fmDevice.SampleRate,
+			ResampleRate:    fmDevice.ResampleRate,
+			SpecpipeVersion: fmDevice.SpecpipeVersion,
 		})
 	}
 	c.JSON(http.StatusOK, &FmDevicesResponse{
@@ -60,12 +62,14 @@ func (s *SpecpipeServer) GetFmDevicesDevicename(c *gin.Context, deviceName strin
 	}
 	c.JSON(http.StatusOK, &FmDeviceResponse{
 		Device: FmDevice{
-			Freq:         fmDevice.Freq,
-			Latitude:     fmDevice.Latitude,
-			Longitude:    fmDevice.Longitude,
-			Name:         fmDevice.Name,
-			SampleRate:   fmDevice.SampleRate,
-			ResampleRate: fmDevice.ResampleRate,
+			Freq:            fmDevice.Freq,
+			Latitude:        fmDevice.Latitude,
+			Longitude:       fmDevice.Longitude,
+			Name:            fmDevice.Name,
+			RegisterTs:      fmDevice.RegisterTs,
+			SampleRate:      fmDevice.SampleRate,
+			ResampleRate:    fmDevice.ResampleRate,
+			SpecpipeVersion: fmDevice.SpecpipeVersion,
 		},
 	})
 }
@@ -104,12 +108,14 @@ func (s *SpecpipeServer) PutFmDevicesDevicename(c *gin.Context, deviceName strin
 
 	c.JSON(http.StatusOK, &FmDeviceResponse{
 		Device: FmDevice{
-			Freq:         fmDevice.Freq,
-			Latitude:     fmDevice.Latitude,
-			Longitude:    fmDevice.Longitude,
-			Name:         fmDevice.Name,
-			SampleRate:   fmDevice.SampleRate,
-			ResampleRate: fmDevice.ResampleRate,
+			Freq:            fmDevice.Freq,
+			Latitude:        fmDevice.Latitude,
+			Longitude:       fmDevice.Longitude,
+			Name:            fmDevice.Name,
+			RegisterTs:      fmDevice.RegisterTs,
+			SampleRate:      fmDevice.SampleRate,
+			ResampleRate:    fmDevice.ResampleRate,
+			SpecpipeVersion: fmDevice.SpecpipeVersion,
 		},
 	})
 }
@@ -128,11 +134,14 @@ func (s *SpecpipeServer) GetIqDevices(c *gin.Context) {
 			return
 		}
 		iqDevicesPresenter = append(iqDevicesPresenter, IqDevice{
-			Freq:       iqDevice.Freq,
-			Latitude:   iqDevice.Latitude,
-			Longitude:  iqDevice.Longitude,
-			Name:       iqDevice.Name,
-			SampleRate: iqDevice.SampleRate,
+			Forward:         iqDevice.Forward,
+			Freq:            iqDevice.Freq,
+			Latitude:        iqDevice.Latitude,
+			Longitude:       iqDevice.Longitude,
+			Name:            iqDevice.Name,
+			RegisterTs:      iqDevice.RegisterTs,
+			SampleRate:      iqDevice.SampleRate,
+			SpecpipeVersion: iqDevice.SpecpipeVersion,
 		})
 	}
 	c.JSON(http.StatusOK, &IqDevicesResponse{
@@ -157,11 +166,14 @@ func (s *SpecpipeServer) GetIqDevicesDevicename(c *gin.Context, deviceName strin
 	}
 	c.JSON(http.StatusOK, &IqDeviceResponse{
 		Device: IqDevice{
-			Freq:       iqDevice.Freq,
-			Latitude:   iqDevice.Latitude,
-			Longitude:  iqDevice.Longitude,
-			Name:       iqDevice.Name,
-			SampleRate: iqDevice.SampleRate,
+			Forward:         iqDevice.Forward,
+			Freq:            iqDevice.Freq,
+			Latitude:        iqDevice.Latitude,
+			Longitude:       iqDevice.Longitude,
+			Name:            iqDevice.Name,
+			RegisterTs:      iqDevice.RegisterTs,
+			SampleRate:      iqDevice.SampleRate,
+			SpecpipeVersion: iqDevice.SpecpipeVersion,
 		},
 	})
 }
@@ -198,11 +210,14 @@ func (s *SpecpipeServer) PutIqDevicesDevicename(c *gin.Context, deviceName strin
 
 	c.JSON(http.StatusOK, &IqDeviceResponse{
 		Device: IqDevice{
-			Freq:       iqDevice.Freq,
-			Latitude:   iqDevice.Latitude,
-			Longitude:  iqDevice.Longitude,
-			Name:       iqDevice.Name,
-			SampleRate: iqDevice.SampleRate,
+			Forward:         iqDevice.Forward,
+			Freq:            iqDevice.Freq,
+			Latitude:        iqDevice.Latitude,
+			Longitude:       iqDevice.Longitude,
+			Name:            iqDevice.Name,
+			RegisterTs:      iqDevice.RegisterTs,
+			SampleRate:      iqDevice.SampleRate,
+			SpecpipeVersion: iqDevice.SpecpipeVersion,
 		},
 	})
 }

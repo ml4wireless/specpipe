@@ -75,12 +75,20 @@ components:
     iq_device:
       additionalProperties: false
       required:
+        - register_ts
+        - specpipe_version
         - name
         - sample_rate
         - freq
         - longitude
         - latitude
+        - forward
       properties:
+        register_ts:
+          type: integer
+          format: int64
+        specpipe_version:
+          type: string
         name:
           type: string
         sample_rate:
@@ -93,6 +101,8 @@ components:
         latitude:
           type: number
           format: float
+        forward:
+          type: boolean
 
     iq_device_response:
       additionalProperties: false
