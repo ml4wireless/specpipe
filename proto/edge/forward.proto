@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package edge;
+option go_package = "proto/edge;edge";
+
+service ForwardService {
+    rpc Forward(stream ForwardPayload) returns (ForwardResponse) {};
+}
+
+message ForwardPayload {
+	bytes payload = 1;
+}
+
+message ForwardResponse {
+}
