@@ -146,7 +146,7 @@ curl http://localhost/v0/fm/devices
 ```
 Example response:
 ```
-{"devices":[{"freq":"99700000","latitude":0,"longitude":0,"name":"dev1","sample_rate":"170k"}]}
+{"devices":[{"freq":"99700000","latitude":0,"longitude":0,"name":"dev1","register_ts":1708125826204,"resample_rate":"32k","sample_rate":"170k","specpipe_version":"v0.2.0"}]}
 ```
 
 View configuration of a registered FM device.
@@ -155,7 +155,7 @@ curl http://localhost/v0/fm/devices/<device_name>
 ```
 Example response:
 ```
-{"device":{"freq":"99700000","latitude":0,"longitude":0,"name":"dev1","sample_rate":"170k"}}
+{"device":{"freq":"99700000","latitude":0,"longitude":0,"name":"dev1","register_ts":1708125826204,"resample_rate":"32k","sample_rate":"170k","specpipe_version":"v0.2.0"}}
 ```
 
 Update configuration of a registered FM device. For example, you could tune a device to frequency 94100000 with samping rate 200k on the fly.
