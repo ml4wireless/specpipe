@@ -72,6 +72,9 @@ var forwardCmd = &cobra.Command{
 		signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 
 		conn, err := initGrpcClient(ctx, config.Grpc.Target)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		done := make(chan bool, 1)
 		go func() {
@@ -122,8 +125,8 @@ var forwardCmd = &cobra.Command{
 }
 
 func initGrpcClient(ctx context.Context, grpcTarget string) (*grpc.ClientConn, error) {
-	tlsTransCreds := grpc.WithTransportCredentials(insecure.NewCredentials())
-	conn, err := grpc.DialContext(ctx, grpcTarget, tlsTransCreds)
+	tlsTransCredsOpt := grpc.WithTransportCredentials(insecure.NewCredentials())
+	conn, err := grpc.DialContext(ctx, grpcTarget, tlsTransCredsOpt)
 	if err != nil {
 		return nil, err
 	}
