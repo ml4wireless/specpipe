@@ -7,9 +7,17 @@ import (
 	"time"
 
 	"github.com/ml4wireless/specpipe/common"
+	"github.com/ml4wireless/specpipe/proto/edge"
+	"google.golang.org/grpc"
 )
 
-func ForwardIQ(ctx context.Context, config *ForwardConfig, logger common.EdgeLogrus) error {
+func ForwardIQ(ctx context.Context, config *ForwardConfig, logger common.EdgeLogrus, conn *grpc.ClientConn) error {
+	client := edge.NewForwardServiceClient(conn)
+	stream, err := client.Forward(ctx)
+	if err != nil {
+		return err
+	}
+
 	if config.Rtlsdr.Freq == "" {
 		return ErrEmptyFreq
 	}
@@ -28,6 +36,10 @@ func ForwardIQ(ctx context.Context, config *ForwardConfig, logger common.EdgeLog
 
 	cleanup := func() error {
 		if err = cmd.Process.Kill(); err != nil {
+			return err
+		}
+
+		if _, err = stream.CloseAndRecv(); err != nil {
 			return err
 		}
 		return nil
@@ -63,8 +75,14 @@ func ForwardIQ(ctx context.Context, config *ForwardConfig, logger common.EdgeLog
 		}
 		payload := make([]byte, 16*16384)
 		copy(payload, chunk)
-		// TODO: grpc client streaming
-		// watch out error handling
+
+		forwardPayload := &edge.ForwardPayload{
+			Payload: payload,
+		}
+		if err := stream.Send(forwardPayload); err != nil {
+			logger.Error(err)
+		}
+
 		select {
 		case <-ctx.Done():
 			goto CLEANUP

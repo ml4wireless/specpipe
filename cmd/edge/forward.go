@@ -14,6 +14,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var forwardCmd = &cobra.Command{
@@ -69,6 +71,8 @@ var forwardCmd = &cobra.Command{
 		sig := make(chan os.Signal, 1)
 		signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 
+		conn, err := initGRPCClient(ctx, config.Grpc.Target)
+
 		done := make(chan bool, 1)
 		go func() {
 			subCtx, subCancel := context.WithCancel(ctx)
@@ -99,7 +103,7 @@ var forwardCmd = &cobra.Command{
 					logger.Infof("device %s tuned to frequency=%s sampling_rate=%s", config.Device.Name, config.Rtlsdr.Freq, config.Rtlsdr.SampleRate)
 					subCtx, subCancel = context.WithCancel(ctx)
 					go func() {
-						if err := edge.ForwardIQ(subCtx, config, logger); err != nil {
+						if err := edge.ForwardIQ(subCtx, config, logger, conn); err != nil {
 							log.Fatal(err)
 						}
 					}()
@@ -115,6 +119,15 @@ var forwardCmd = &cobra.Command{
 
 		<-done
 	},
+}
+
+func initGRPCClient(ctx context.Context, grpcTarget string) (*grpc.ClientConn, error) {
+	tlsTransCreds := grpc.WithTransportCredentials(insecure.NewCredentials())
+	conn, err := grpc.DialContext(ctx, grpcTarget, tlsTransCreds)
+	if err != nil {
+		return nil, err
+	}
+	return conn, nil
 }
 
 func init() {
