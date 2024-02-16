@@ -97,7 +97,7 @@ Building the Docker images locally is optional since prebuilt images are availab
 Navigate to the root of the `specpipe` project and build the docker image.
 ```bash
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
-make docker VERSION=v0.1.0
+make docker VERSION=v0.2.0
 ```
 ### Deployment
 
