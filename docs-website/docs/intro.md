@@ -6,7 +6,7 @@ title: Introduction
 
 # SpecPipe: A scalable AI/ML-facilitating data pipeline for spectrum
 
-By: Omair Alam, Will Almy, Alice Lee and Huo-Ming Shu
+By: Omair Alam, Will Almy, Alice Lee, and Hao-Ming Hsu
 
 ---
 
