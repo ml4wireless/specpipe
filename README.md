@@ -15,13 +15,16 @@ Key Features:
 - Fault tolerant - automatic reconnections and timeouts between edge and cloud.
 - Horizontally scalable - seamlessly orchestrates and manages a large, scalable number of edge devices.
 - Dynamic configuration - allows dynamic device configuration on the fly, enabling flexibility for operating large clusters.
-- Portable - packages complex dependencies into a single container for easy edge deployment.
+- Direct data stream forwarding - allows IQ edge devices to directly forward their data streams to specified servers through gRPC, without going through NATS. This reduces load and disk space used on NATS servers and provides more flexibility in routing data streams directly between devices.
+- Portable - packages complex dependencies into a single container for easy edge and cloud deployment.
 - Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
 - Lightweight - small binaries with low memory footprint.
 
+<img width="535" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/678f0650-1a39-4038-892b-26750adc56ad">
+
 ## System Architecture
 
-<img width="1200" alt="system_architecture" src="images/system_architecture.png">
+<img width="1068" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/1258bb70-360c-4100-af60-8c1792050d7c">
 
 ## Getting Started
 ### Install Dependencies for librtlsdr
