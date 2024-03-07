@@ -107,7 +107,7 @@ Start a `rtl_rpcd` daemon on the host machine, which allows remote access of SDR
 RTLSDR_RPC_SERV_ADDR=127.0.0.1 RTLSDR_RPC_SERV_PORT=40000 rtl_rpcd >> rtlrpcd.log 2>&1 &
 ```
 
-Start NATS JetStream container and create stream `specpipe`, `specpipe-iq` and KV store `specpipe` respectively.
+Start NATS JetStream container and create stream `specpipe`, `specpipe-iq` and KV store `specpipe` respectively. This will also create Prometheus, Grafana, and NATS exporter containers, which are used for monitoring and alerting.
 
 ```bash
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
@@ -124,6 +124,7 @@ docker run --rm -d minghsu0107/specpipe-edge fm \
     --sample-rate=170k \
     --freq=99700000
 ```
+Note that `host.docker.internal` is used to access the host machine from the container, but only works on Mac and Windows. If you are using Linux, you can add argument `--network=host` and use `localhost` instead.
 
 Start the API server at `localhost:8888`, which serves as the control plane enabling viewing of registered services and management of device configurations.
 
@@ -139,7 +140,7 @@ Start the API server healthcheck routine.
 docker run --rm -d minghsu0107/specpipe-server health \
     --nats-url=nats://mytoken@host.docker.internal:4222
 ```
-### Cloud APIs
+#### Cloud APIs
 View configurations of all registered FM devices.
 ```bash
 curl http://localhost/v0/fm/devices
@@ -168,7 +169,9 @@ You could optionally run the Swagger UI to view all APIs in your browser at `htt
 ```bash
 docker run --rm -d -p 5555:8080 -e API_URL=api/main.yaml -v $(PWD)/server/openapi:/usr/share/nginx/html/api swaggerapi/swagger-ui
 ```
-### NATS JetStream Subjects
+#### Grafana
+Open `http://localhost:3000` in your browser to access Grafana. The default username and password are `admin` and `admin`. You could add the Prometheus datasource at `http://prometheus:9090`.
+#### NATS JetStream Subjects
 - Demodulated data pipeline: `specpipe.data.<sdr_type>.<device_name>`
   - Supported SDR types: `iq`, `fm`
 - IQ data pipeline: `specpipe-iq.data.iq.<device_name>`
