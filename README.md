@@ -1,5 +1,11 @@
 # SpecPipe - Distributed Data Pipeline for Spectrum
-SpecPipe is an end-to-end distributed data pipeline that leverages software-defined radio (SDR) to capture, process, and stream radio spectrum data in near real-time. It consists of three primary components:
+In today's interconnected world, radio spectrum signals surround us, yet there exist noticeable limitations in the data systems created to access, monitor, perform AI experiments, and contribute to this analog data.
+
+To democratize the access and usage of spectrum data, we have built SpecPipe, a modern scalable data pipeline for spectrum. This platform’s core values of accessibility, extensibility and scalability ensure that individual users can start to work with radio data with inexpensive hardware, minimal configuration, and a smooth onboarding process.
+
+We have accomplished this goal of improving access to spectrum data by building SpecPipe as an open source project free for people to access and use, with easy to follow documentation, and a plethora of startup examples that allow users to understand our framework interactively.
+
+SpecPipe leverages software-defined radio (SDR) to capture, process, and stream radio spectrum data in near real-time. It consists of three primary components:
 - `rtl_rpcd` - runs on edge nodes, facilitating remote access to SDR hardware for `sp-edge`.
 - `sp-edge` - operates within containers on edge nodes, managing SDR hardware to capture spectrum data. It processes and streams the data to the cloud.
 - `sp-server` - provides a centralized control plane in the cloud to seamlessly orchestrate and manage edge devices at scale. It enables monitoring and management of devices and their data streams.
@@ -182,3 +188,7 @@ Open `http://localhost:3000` in your browser to access Grafana. The default user
   - Supported commands:
     - `health` - For health checks
     - `watchcfg` - For dynamic configuration
+### Example Applications
+- [FM Audio Stream on NATS JetStream](./_examples/audio_play)
+- [Plotting IQ Data Spectrum](./_examples/plot_iq)
+- [Speech to Text](./_examples/speech2text)
