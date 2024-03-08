@@ -26,11 +26,11 @@ Key Features:
 - Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
 - Lightweight - small binaries with low memory footprint.
 
-<img width="535" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/678f0650-1a39-4038-892b-26750adc56ad">
+<img width="583" alt="image" src="https://github.com/minghsu0107/specpipe/assets/50090692/1927545a-e807-4818-9a7f-5a2d49337db5">
 
 ## System Architecture
 
-<img width="1068" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/1258bb70-360c-4100-af60-8c1792050d7c">
+<img width="1089" alt="image" src="https://github.com/minghsu0107/specpipe/assets/50090692/309a473a-33b3-4659-9292-fadee95276b7">
 
 ## Getting Started
 ### Install Dependencies for librtlsdr
@@ -106,7 +106,7 @@ Building the Docker images locally is optional since prebuilt images are availab
 Navigate to the root of the `specpipe` project and build the docker image.
 ```bash
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
-make docker VERSION=v0.2.0
+make docker VERSION=v0.2.1
 ```
 ### Deployment
 
@@ -156,7 +156,7 @@ curl http://localhost/v0/fm/devices
 ```
 Example response:
 ```
-{"devices":[{"freq":"99700000","latitude":0,"longitude":0,"name":"dev1","register_ts":1708125826204,"resample_rate":"32k","sample_rate":"170k","specpipe_version":"v0.2.0"}]}
+{"devices":[{"freq":"99700000","latitude":0,"longitude":0,"name":"dev1","register_ts":1708125826204,"resample_rate":"32k","sample_rate":"170k","specpipe_version":"v0.2.1"}]}
 ```
 
 View configuration of a registered FM device.
@@ -165,7 +165,7 @@ curl http://localhost/v0/fm/devices/<device_name>
 ```
 Example response:
 ```
-{"device":{"freq":"99700000","latitude":0,"longitude":0,"name":"dev1","register_ts":1708125826204,"resample_rate":"32k","sample_rate":"170k","specpipe_version":"v0.2.0"}}
+{"device":{"freq":"99700000","latitude":0,"longitude":0,"name":"dev1","register_ts":1708125826204,"resample_rate":"32k","sample_rate":"170k","specpipe_version":"v0.2.1"}}
 ```
 
 Update configuration of a registered FM device. For example, you could tune a device to frequency 94100000 with samping rate 200k on the fly.
