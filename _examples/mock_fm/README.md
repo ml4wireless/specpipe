@@ -16,3 +16,18 @@ You can also run in Docker:
 ```bash
 docker run --rm -e NATS_URL="nats://mytoken@host.docker.internal:4222" -e DEVICE="dev1" minghsu0107/specpipe-audio-mock
 ```
+## Prometheus Exporter
+To monitor the FM audio data size, you can run the Prometheus exporter.
+
+First, install dependencies:
+```bash
+pip3 install -r requirements.txt
+```
+
+Then, run the exporter:
+```bash
+export NATS_URL="nats://mytoken@host.docker.internal:4222"
+export DEVICE="dev1"
+python3 prom.py
+```
+The counter metrics `fm_data_bytes_total` will be available at `http://localhost:6060/metrics`.
