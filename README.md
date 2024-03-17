@@ -5,9 +5,6 @@ To democratize the access and usage of spectrum data, we have built SpecPipe, a 
 
 We have accomplished this goal of improving access to spectrum data by building SpecPipe as an open source project free for people to access and use, with easy to follow documentation, and a plethora of startup examples that allow users to understand our framework interactively.
 
-<img width="578" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/6279f829-133d-464d-83fa-10960e1feec1">
-
-
 SpecPipe leverages software-defined radio (SDR) to capture, process, and stream radio spectrum data in near real-time. It consists of three primary components:
 - `rtl_rpcd` - runs on edge nodes, facilitating remote access to SDR hardware for `sp-edge`.
 - `sp-edge` - operates within containers on edge nodes, managing SDR hardware to capture spectrum data. It processes and streams the data to the cloud.
