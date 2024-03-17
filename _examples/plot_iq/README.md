@@ -1,7 +1,7 @@
 # IQ Visualization & IQEngine Integration
 This example demonstrates how to visualize the IQ spectrum data captured by SpecPipe.
 ## Prerequisites
-Follow the deployment instructions in [README.md](../../README.md#deployment) to set up SpecPipe.
+Follow the deployment instructions in [README.md](../../README.md) to set up SpecPipe.
 ## Capture IQ Data
 Capture IQ data at 99.7 MHz with a 2.5 MHz sampling rate:
 
@@ -27,7 +27,7 @@ The spectrum visualization will be saved to `iq.png` by default.
 ## IQEngine Integration
 You can export the IQ data in [SigMF](https://github.com/sigmf/SigMF) format that can be imported into [IQEngine](https://iqengine.org/browser) for further visualization as follows:
 
-<img width="1466" alt="image" src="https://github.com/minghsu0107/specpipe/assets/50090692/00976b65-0811-48ce-8730-09f796eab229">
+<img width="1009" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/fdec1a06-fa4d-413e-9968-17f1e4349aad">
 
 For example, the following command exports the latest 50 MB of IQ data from the device `dev1`:
 ```bash
