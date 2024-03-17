@@ -5,7 +5,8 @@ To democratize the access and usage of spectrum data, we have built SpecPipe, a 
 
 We have accomplished this goal of improving access to spectrum data by building SpecPipe as an open source project free for people to access and use, with easy to follow documentation, and a plethora of startup examples that allow users to understand our framework interactively.
 
-<img width="583" alt="image" src="https://github.com/minghsu0107/specpipe/assets/50090692/1927545a-e807-4818-9a7f-5a2d49337db5">
+<img width="578" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/6279f829-133d-464d-83fa-10960e1feec1">
+
 
 SpecPipe leverages software-defined radio (SDR) to capture, process, and stream radio spectrum data in near real-time. It consists of three primary components:
 - `rtl_rpcd` - runs on edge nodes, facilitating remote access to SDR hardware for `sp-edge`.
@@ -28,9 +29,10 @@ Key Features:
 - Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
 - Lightweight - small binaries with low memory footprint.
 
-## System Architecture
+The following is an overview of the system architecture:
 
-<img width="658" alt="image" src="https://github.com/minghsu0107/specpipe/assets/50090692/73073a46-03f7-41b8-9a5a-20c0cabe2f90">
+<img width="710" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/53c8eec0-47db-4e8d-8401-49bc45a1a4f4">
+
 
 ## Getting Started
 ### Install Dependencies for librtlsdr
