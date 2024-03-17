@@ -29,10 +29,9 @@ Key Features:
 - Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
 - Lightweight - small binaries with low memory footprint.
 
-The following is an overview of the system architecture:
+The following is an overview of the system:
 
-<img width="673" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/b9ac2254-e85c-4de6-8b0f-9069f328099d">
-
+<img width="821" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/5bd11fa2-d512-4a03-b0da-80f6fa2484ff">
 
 ## Getting Started
 ### Install Dependencies for librtlsdr
