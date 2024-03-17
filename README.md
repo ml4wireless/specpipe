@@ -31,7 +31,7 @@ Key Features:
 
 The following is an overview of the system architecture:
 
-<img width="710" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/53c8eec0-47db-4e8d-8401-49bc45a1a4f4">
+<img width="673" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/b9ac2254-e85c-4de6-8b0f-9069f328099d">
 
 
 ## Getting Started
