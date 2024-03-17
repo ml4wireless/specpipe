@@ -6,7 +6,7 @@ This example program streams the content of `mock_audio.wav` file (sampled at 32
 docker build -t minghsu0107/specpipe-audio-mock .
 ```
 ## Usage
-First, start NATS JetStream container with proper configurations as shown in the [deployment section](../../README.md#deployment).
+First, start NATS JetStream container with proper configurations as shown in [README.md](../../README.md).
 
 To simulate an FM device named `dev1` streaming audio to NATS JetStream:
 ```bash
