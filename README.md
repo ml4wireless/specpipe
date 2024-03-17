@@ -5,6 +5,8 @@ To democratize the access and usage of spectrum data, we have built SpecPipe, a 
 
 We have accomplished this goal of improving access to spectrum data by building SpecPipe as an open source project free for people to access and use, with easy to follow documentation, and a plethora of startup examples that allow users to understand our framework interactively.
 
+<img width="583" alt="image" src="https://github.com/minghsu0107/specpipe/assets/50090692/1927545a-e807-4818-9a7f-5a2d49337db5">
+
 SpecPipe leverages software-defined radio (SDR) to capture, process, and stream radio spectrum data in near real-time. It consists of three primary components:
 - `rtl_rpcd` - runs on edge nodes, facilitating remote access to SDR hardware for `sp-edge`.
 - `sp-edge` - operates within containers on edge nodes, managing SDR hardware to capture spectrum data. It processes and streams the data to the cloud.
@@ -26,11 +28,9 @@ Key Features:
 - Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
 - Lightweight - small binaries with low memory footprint.
 
-<img width="583" alt="image" src="https://github.com/minghsu0107/specpipe/assets/50090692/1927545a-e807-4818-9a7f-5a2d49337db5">
-
 ## System Architecture
 
-<img width="1089" alt="image" src="https://github.com/minghsu0107/specpipe/assets/50090692/309a473a-33b3-4659-9292-fadee95276b7">
+<img width="658" alt="image" src="https://github.com/minghsu0107/specpipe/assets/50090692/73073a46-03f7-41b8-9a5a-20c0cabe2f90">
 
 ## Getting Started
 ### Install Dependencies for librtlsdr
@@ -135,7 +135,7 @@ docker run --rm -d minghsu0107/specpipe-edge fm \
 ```
 Note that `host.docker.internal` is used to access the host machine from the container, but only works on Mac and Windows. If you are using Linux, you can add argument `--network=host` and use `localhost` instead.
 
-Start the API server at `localhost:8888`, which serves as the control plane enabling viewing of registered services and management of device configurations.
+Start the API server (controller), which serves as the control plane enabling viewing of registered services and management of device configurations.
 
 ```bash
 docker run --rm -p 80:8888 -d minghsu0107/specpipe-server controller \
@@ -188,7 +188,8 @@ Open `http://localhost:3000` in your browser to access Grafana. The default user
   - Supported commands:
     - `health` - For health checks
     - `watchcfg` - For dynamic configuration
-### Example Applications
+### More Examples
 - [FM Audio Stream on NATS JetStream](./_examples/audio_play)
-- [Plotting IQ Data Spectrum](./_examples/plot_iq)
+- [IQ Visualization & IQEngine Integration](./_examples/plot_iq)
 - [Speech to Text](./_examples/speech2text)
+- [Audio Data Mocking & Prometheus Exporter](./_examples/mock_fm)

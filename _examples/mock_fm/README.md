@@ -1,4 +1,4 @@
-# Mock Audio Streaming
+# Audio Data Mocking & Prometheus Exporter
 
 This example program streams the content of `mock_audio.wav` file (sampled at 32 KHz) to NATS JetStream circularly to simulate continuous audio collection. This allows creating mock audio data for testing without requiring an actual antenna or audio source. The circular streaming approach generates a continuous audio data source.
 ## Docker Build
