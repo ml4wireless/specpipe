@@ -28,7 +28,8 @@ Key Features:
 
 The following is an overview of the system:
 
-<img width="821" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/5bd11fa2-d512-4a03-b0da-80f6fa2484ff">
+<img width="804" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/b656db2c-8c44-48ab-a24e-5e2333d17c49">
+
 
 ## Getting Started
 ### Install Dependencies for librtlsdr
