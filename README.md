@@ -28,7 +28,7 @@ Key Features:
 
 The following is an overview of the system:
 
-<img width="804" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/b656db2c-8c44-48ab-a24e-5e2333d17c49">
+<img width="813" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/bd950fea-229b-45bd-96d0-54919d8390af">
 
 
 ## Getting Started
