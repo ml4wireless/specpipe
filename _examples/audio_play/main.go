@@ -83,7 +83,7 @@ func main() {
 
 	portaudio.Initialize()
 	defer portaudio.Terminate()
-	// stereo audio
+	
 	stream, err := portaudio.OpenDefaultStream(0, 1, float64(rate), len(out), &out)
 	if err != nil {
 		fmt.Println(err)
