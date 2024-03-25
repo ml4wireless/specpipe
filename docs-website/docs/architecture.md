@@ -69,7 +69,7 @@ Raw IQ radio data is sent from Edge Nodes to Applications via a socket. This is 
 * Line 3 : Applications update the configuration of an edge node (such as changing its sampling rate or frequency) via the Controller API. The Controller API then publishes a message on the appropriate NATS subject to change that setting for an Edge Node.
 * Line 4: Applications can get edge node metadata (such as their location and sampling rate) via the Controller API.
 
-See [Controller API](./setup/sever-edge-setup/#7-setting-up-controller-plane) for example calls.
+See [Controller API](./setup/sever-edge-setup#7-setting-up-controller-plane) for example calls.
 
 #### 4. Monitoring Flow (5,6)
 Applications can monitor the health of the Edge Nodes by running the health command for a particular edge node. When this command is issued, NATS sending heart beat requests to all the Edge Nodes (line 5). Then, the edge nodes alive respond with a heartbeat (line 6) to the server via NATS

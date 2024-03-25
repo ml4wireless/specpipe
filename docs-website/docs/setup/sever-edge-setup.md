@@ -5,7 +5,7 @@ sidebar_position: 1
 
 # Setup SpecPipe Edge Device, Server, Controller Plane and Dashboards
 
-Note: This guide only applies if you want to setup to send Radio Data as an [Edge Node](./architecture/#edge-nodes). If you only want to build an application that accesses data, you don't need to have an SDR.
+Note: This guide only applies if you want to setup to send Radio Data as an [Edge Node](../architecture#edge-nodes). If you only want to build an application that accesses data, you don't need to have an SDR.
 
 ### 1. Install Dependencies for librtlsdr
 In order to extract raw data from the SDR hardware, the `librtlsdr` binaries have to be installed on the host machine. Before we install these binaries, we need to install `gcc`, `g++`, `make`, `cmake` and `libusb`.
