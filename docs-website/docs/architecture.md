@@ -1,6 +1,6 @@
 ---
 sidebar_label: 'Architecture'
-sidebar_position: 2
+sidebar_position: 1000
 title: Architecture
 ---
 ## High Level Design
@@ -18,7 +18,7 @@ NATS is the backbone of our project. We couple NATS with Jetsream Jetstream to i
 * Sending radio signal data (either raw IQ data, or demodulated data) from an Edge Node to an Application (see definitions below).
 * Sending configuration and health commands from Applications to Edge nodes to change the configuration of the edge nodes as well as receive health check from the edge nodes.
 
-To accomplish this goal, we use the following NATS JetStream subjects [SpecPipe Subjects](https://github.com/ml4wireless/specpipe?tab=readme-ov-file#nats-jetstream-subjects)
+To accomplish this goal, we use the following NATS JetStream subjects [SpecPipe Subjects](./setup/sever-edge-setup#nats-jetstream-subjects)
 
 ### Edge Nodes
 
@@ -32,9 +32,9 @@ Applications are software that run on devices connected to the system. An applic
 
 Additionally, an application can also update the configuration (such as frequency and sampling rate) of an edge node (see Control Flow line 3) via the Controller API.
 
-The aforementioned features can be accessed by using a Python Software Developemnt Toolkit provided by the SpecPipe project [specpipe-sdk-py](https://github.com/ml4wireless/specpipe-sdk-py). 
+The aforementioned features can be accessed by using a Python Software Developemnt Toolkit provided by the SpecPipe project [specpipe-sdk-py](./setup/application.md). 
 
-[Here](https://github.com/ml4wireless/specpipe/tree/main/_examples) are some example applications build by the SpecPipe development team.
+[Here](./examples) are some example applications build by the SpecPipe development team.
 
 In our diagram above, 'Edge Nodes' and 'Applications' are separate boxes. This isn't meant to imply that an Edge Node cannot be an application. Since an application is just software running on a machine connected to a system, an Edge node can also be running an application. The diagram makes this distinction solely for ease of understanding the various flows.
 
@@ -69,7 +69,7 @@ Raw IQ radio data is sent from Edge Nodes to Applications via a socket. This is 
 * Line 3 : Applications update the configuration of an edge node (such as changing its sampling rate or frequency) via the Controller API. The Controller API then publishes a message on the appropriate NATS subject to change that setting for an Edge Node.
 * Line 4: Applications can get edge node metadata (such as their location and sampling rate) via the Controller API.
 
-See [Controller API](https://github.com/ml4wireless/specpipe?tab=readme-ov-file#cloud-apis) for example calls.
+See [Controller API](./setup/sever-edge-setup/#7-setting-up-controller-plane) for example calls.
 
 #### 4. Monitoring Flow (5,6)
 Applications can monitor the health of the Edge Nodes by running the health command for a particular edge node. When this command is issued, NATS sending heart beat requests to all the Edge Nodes (line 5). Then, the edge nodes alive respond with a heartbeat (line 6) to the server via NATS
