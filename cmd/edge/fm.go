@@ -50,12 +50,14 @@ var fmCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 		deviceInfo := common.FMDevice{
-			Name:         config.Device.Name,
-			Freq:         config.Rtlsdr.Freq,
-			SampleRate:   config.Rtlsdr.SampleRate,
-			ResampleRate: config.Rtlsdr.ResampleRate,
-			Latitude:     config.Device.Latitude,
-			Longitude:    config.Device.Longitude,
+			RegisterTs:      time.Now().UnixMilli(),
+			SpecpipeVersion: Version,
+			Name:            config.Device.Name,
+			Freq:            config.Rtlsdr.Freq,
+			SampleRate:      config.Rtlsdr.SampleRate,
+			ResampleRate:    config.Rtlsdr.ResampleRate,
+			Latitude:        config.Device.Latitude,
+			Longitude:       config.Device.Longitude,
 		}
 		heartbeatSub, err := edge.RegisterDevice(regCtx, clusterConn, kv, common.FM, config.Device.Name, &deviceInfo)
 		if err != nil {

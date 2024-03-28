@@ -1,0 +1,17 @@
+
+{
+    "global": {
+        "core:datatype": "cu8",
+        "core:sample_rate": 2500000,
+        "core:hw": "RTL-SDR IQ example",
+        "core:author": "minghsu0107",
+        "core:version": "1.0.0"
+    },
+    "captures": [
+        {
+            "core:sample_start": 0,
+            "core:frequency": 99700000
+        }
+    ],
+    "annotations": []
+}

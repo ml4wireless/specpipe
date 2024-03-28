@@ -1,5 +1,11 @@
 version: '3'
 services:
+  grafana:
+    image: grafana/grafana:9.3.6
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
   nats-box:
     image: natsio/nats-box:0.14.0
     command: >
@@ -15,8 +21,36 @@ services:
     image: nats:2.10
     ports:
       - "4222:4222"
+      - "8222:8222"
     restart: always
     command:
       - -auth
       - mytoken
       - -js
+      - -m
+      - "8222"
+  nats-prom-exporter:
+    image: natsio/prometheus-nats-exporter:0.12.0
+    ports:
+      - "7777:7777"
+    restart: always
+    command:
+        - -healthz
+        - -connz
+        - -routez
+        - -subz
+        - -varz
+        - -jsz=all
+        - http://nats:8222
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    restart: always
+    volumes:
+      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
+    command:
+      - --config.file=/etc/prometheus/prometheus.yaml
+      - --enable-feature=exemplar-storage
+    ports:
+      - 9090:9090
+volumes:
+  grafana_data:

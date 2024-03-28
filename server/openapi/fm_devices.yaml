@@ -75,6 +75,8 @@ components:
     fm_device:
       additionalProperties: false
       required:
+        - register_ts
+        - specpipe_version
         - name
         - sample_rate
         - resample_rate
@@ -82,6 +84,11 @@ components:
         - longitude
         - latitude
       properties:
+        register_ts:
+          type: integer
+          format: int64
+        specpipe_version:
+          type: string
         name:
           type: string
         sample_rate:

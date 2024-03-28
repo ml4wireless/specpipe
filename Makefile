@@ -19,6 +19,10 @@ codegen: codegen-install
 codegen-install:
 	$(GOINSTALL) github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.0.0
 
+.PHONY: proto
+proto:
+	protoc proto/edge/forward.proto --go_out=plugins=grpc:.
+
 docker: docker-server docker-edge
 docker-server:
 	@docker build -f ./build/server/Dockerfile --build-arg VERSION=$(VERSION) -t minghsu0107/specpipe-server .

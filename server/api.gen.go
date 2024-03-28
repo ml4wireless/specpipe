@@ -26,12 +26,14 @@ type ErrorResponse struct {
 
 // FmDevice defines model for fm_device.
 type FmDevice struct {
-	Freq         string  `json:"freq"`
-	Latitude     float32 `json:"latitude"`
-	Longitude    float32 `json:"longitude"`
-	Name         string  `json:"name"`
-	ResampleRate string  `json:"resample_rate"`
-	SampleRate   string  `json:"sample_rate"`
+	Freq            string  `json:"freq"`
+	Latitude        float32 `json:"latitude"`
+	Longitude       float32 `json:"longitude"`
+	Name            string  `json:"name"`
+	RegisterTs      int64   `json:"register_ts"`
+	ResampleRate    string  `json:"resample_rate"`
+	SampleRate      string  `json:"sample_rate"`
+	SpecpipeVersion string  `json:"specpipe_version"`
 }
 
 // FmDeviceResponse defines model for fm_device_response.
@@ -46,11 +48,14 @@ type FmDevicesResponse struct {
 
 // IqDevice defines model for iq_device.
 type IqDevice struct {
-	Freq       string  `json:"freq"`
-	Latitude   float32 `json:"latitude"`
-	Longitude  float32 `json:"longitude"`
-	Name       string  `json:"name"`
-	SampleRate string  `json:"sample_rate"`
+	Forward         bool    `json:"forward"`
+	Freq            string  `json:"freq"`
+	Latitude        float32 `json:"latitude"`
+	Longitude       float32 `json:"longitude"`
+	Name            string  `json:"name"`
+	RegisterTs      int64   `json:"register_ts"`
+	SampleRate      string  `json:"sample_rate"`
+	SpecpipeVersion string  `json:"specpipe_version"`
 }
 
 // IqDeviceResponse defines model for iq_device_response.
@@ -136,7 +141,7 @@ func (siw *ServerInterfaceWrapper) GetFmDevicesDevicename(c *gin.Context) {
 
 	err = runtime.BindStyledParameter("simple", false, "devicename", c.Param("devicename"), &devicename)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("invalid format for parameter devicename: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter devicename: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -160,7 +165,7 @@ func (siw *ServerInterfaceWrapper) PutFmDevicesDevicename(c *gin.Context) {
 
 	err = runtime.BindStyledParameter("simple", false, "devicename", c.Param("devicename"), &devicename)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("invalid format for parameter devicename: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter devicename: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -197,7 +202,7 @@ func (siw *ServerInterfaceWrapper) GetIqDevicesDevicename(c *gin.Context) {
 
 	err = runtime.BindStyledParameter("simple", false, "devicename", c.Param("devicename"), &devicename)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("invalid format for parameter devicename: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter devicename: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -221,7 +226,7 @@ func (siw *ServerInterfaceWrapper) PutIqDevicesDevicename(c *gin.Context) {
 
 	err = runtime.BindStyledParameter("simple", false, "devicename", c.Param("devicename"), &devicename)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("invalid format for parameter devicename: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter devicename: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -273,19 +278,20 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+xXT2/bPgz9KgZ/v6MRe1t38W1F1yHYv6zFTkMRqBadqrAlRaIDBIG/+yA5dtzUTZM1",
-	"DdoipwgKJT6Sj3zyAlJVaCVRkoVkATa9wYL5JRqjzNig1UpadDuMc0FCSZaPjNJoSKCFJGO5xRB0Z2sB",
-	"HImJ3K1orhESsGSEnEAVAgnKseefKgSD01IY5JD8aW5o7K/Cxl5d32JK7qasGHOciXRXcJnBaS+0nJGg",
-	"kvv7MmUKRpBAlitG0LqXZXGNxlsrOdnBXLICe70atKzQOY4No36Lzf+vJc5H14mlC3SJYt3nXQ8bU/3v",
-	"hGgK9b/BDBL4L1oxL1rSLlpV9D4d/PZGbPZp4PxSEBZ2B5gtHmYMmz8A2/biFtM3Qd/9k/MxMraJe14y",
-	"ruqzAxnbQwcjYwfmE8hYas4Ix90+n5ZoaV/cfI4htyGOLkX2Gsc+UDozITPlL6jVEC41piOhMbhEM0MT",
-	"fBoNIYQZGiuUhATiQTx45wAojZJpAQl8GMSDGELQjG486Cgrog57JuijdmExF/aQQwJfkM6Ls6WRL4vn",
-	"qD/wPo7dT6okoawzpnUuUn86urUOSPNE2HpEdvrAB87RpkZoqsP6+dXF9HGPjteeLT0+h5LQSJY3qf7s",
-	"Tvja2bIomJlDAt+EpeD8e8DbTBGb2G7vO/tOwqNFvXAjrNoq+2etva+hYQUSGudjsQa4vjlYmgq35Wre",
-	"DMzGoJX2hoBkSgw7aVsn69Uh6r9F+U8OWv5TxoOLeijY2vvJAb3/UBScq1Lyl8n7C2R8xfsgVTITk7Jm",
-	"cF8ThKDLHp6PyhfHc1/wU8Xne8v4g5JZ3dUBB686ttqx1e622m9Pn1WzPaQxYrqNqA+nBxD1vsftaxP1",
-	"4a/HRH2V8K1Fvc3+2xb1ng+v46R5JaLe8v4pov7SeP5son7/+/HAon5stdcs6m2z9WqMO+GvqPulNDkk",
-	"EM1iqK6qvwEAAP//IoUgcJEXAAA=",
+	"H4sIAAAAAAAC/+xX3W7bPAx9FYPfd2nE2dbtwncrug7B/rIWuxqKQLXoVIUtKZScIQjy7oPk2HFSt81f",
+	"g2bIVQ2Xog7Jc3icKSQq10qitAbiKZjkDnPmH5FI0YDQaCUNujeMc2GFkizrk9JIVqCBOGWZwRB049UU",
+	"OFomMvdkJxohBmNJyCHMQrDCZtjyn1kIhKNCEHKIf1cZqvibsIpXt/eYWJcpzQccxyLZFFxKOGqFljEr",
+	"bMF9vlRRzizEkGaKWaivl0V+i+SjlRxuEC5Zjq23Eg6FsUiDcgR1JiHth7NFJiEtDstUhIblOsMBMdue",
+	"89n/a0y00DgYIxmh5PPz8E1rtKhZ/7y45VJWYS6DaoHw5Ii3J2JFkP8JU4jhv2jB+GhO92jBpIc09K+f",
+	"xGZ2A+cfhcXcbACzxsOI2OQR2KYVtxhtKRtFfxjxBlVulcqQSd+MY9fUCyhm3q9wG+1soZV6ri+rlQV9",
+	"NtBKfehgWmnA3EErhebM4qC5hkYFGrsvx9l1k7ct6SfqaFJkr3XsA6ULEzJVPkH5kQDXGpO+0BhcI42R",
+	"go/9HoRQSxC6nTedrgOgNEqmBcTwrtPtdCEEzeydBx2ledRgzxB91a4s5srucYjhM9rL/GIe5MfiOeoP",
+	"vO123Z9ESYuy7JjWmUj86ejelLug5N3aG7yhA184R5OQ0LYs68cXV9P7PV688jXXcmdPWiTJsqrVn9wJ",
+	"PztT5DmjCcTwVRgbXH4LeN0py4amqX0X32h4NC0f3I6brdX9izrez5BYjhbJ3TFdAVxmDuahwr1yM682",
+	"ahVQr9eKgJYKDBttWyXrzSHmv8b4zw46/nPGg6tyKZjy9rMD3v5d2eBSFZK/Tt5fIeML3geJkqkYFiWD",
+	"20QQgi5aeN4vXh3P/cDPFZ/sreOPWuZs2QccvNlJaiepLUvtl6fPQmyPeYwYrWPqvdEBTL3t4/bYTL33",
+	"8zlTXzR8bVOvu/9vm3rLD6/TpjkSU695v4upvzaev5ipP/z9eGBTP0ntmE29Flurx7gTPkWpl4IyiCEa",
+	"d2F2M/sbAAD//9dR9xyoGAAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

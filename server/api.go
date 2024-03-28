@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/ml4wireless/specpipe/common"
+	"github.com/ml4wireless/specpipe/edge"
 )
 
 type SpecpipeServer struct {
@@ -31,12 +32,14 @@ func (s *SpecpipeServer) GetFmDevices(c *gin.Context) {
 			return
 		}
 		fmDevicesPresenter = append(fmDevicesPresenter, FmDevice{
-			Freq:         fmDevice.Freq,
-			Latitude:     fmDevice.Latitude,
-			Longitude:    fmDevice.Longitude,
-			Name:         fmDevice.Name,
-			SampleRate:   fmDevice.SampleRate,
-			ResampleRate: fmDevice.ResampleRate,
+			Freq:            fmDevice.Freq,
+			Latitude:        fmDevice.Latitude,
+			Longitude:       fmDevice.Longitude,
+			Name:            fmDevice.Name,
+			RegisterTs:      fmDevice.RegisterTs,
+			SampleRate:      fmDevice.SampleRate,
+			ResampleRate:    fmDevice.ResampleRate,
+			SpecpipeVersion: fmDevice.SpecpipeVersion,
 		})
 	}
 	c.JSON(http.StatusOK, &FmDevicesResponse{
@@ -60,12 +63,14 @@ func (s *SpecpipeServer) GetFmDevicesDevicename(c *gin.Context, deviceName strin
 	}
 	c.JSON(http.StatusOK, &FmDeviceResponse{
 		Device: FmDevice{
-			Freq:         fmDevice.Freq,
-			Latitude:     fmDevice.Latitude,
-			Longitude:    fmDevice.Longitude,
-			Name:         fmDevice.Name,
-			SampleRate:   fmDevice.SampleRate,
-			ResampleRate: fmDevice.ResampleRate,
+			Freq:            fmDevice.Freq,
+			Latitude:        fmDevice.Latitude,
+			Longitude:       fmDevice.Longitude,
+			Name:            fmDevice.Name,
+			RegisterTs:      fmDevice.RegisterTs,
+			SampleRate:      fmDevice.SampleRate,
+			ResampleRate:    fmDevice.ResampleRate,
+			SpecpipeVersion: fmDevice.SpecpipeVersion,
 		},
 	})
 }
@@ -89,12 +94,16 @@ func (s *SpecpipeServer) PutFmDevicesDevicename(c *gin.Context, deviceName strin
 		errorHandler(c, fmt.Errorf("casting fm device type error: %w", err), http.StatusInternalServerError)
 		return
 	}
+	if updateFmDeviceRequest.Freq == "" {
+		errorHandler(c, fmt.Errorf("parse request error: %w", edge.ErrEmptyFreq), http.StatusBadRequest)
+		return
+	}
 
 	fmDevice.Freq = updateFmDeviceRequest.Freq
-	if updateFmDeviceRequest.SampleRate != nil {
+	if updateFmDeviceRequest.SampleRate != nil && *updateFmDeviceRequest.SampleRate != "" {
 		fmDevice.SampleRate = *updateFmDeviceRequest.SampleRate
 	}
-	if updateFmDeviceRequest.ResampleRate != nil {
+	if updateFmDeviceRequest.ResampleRate != nil && *updateFmDeviceRequest.ResampleRate != "" {
 		fmDevice.ResampleRate = *updateFmDeviceRequest.ResampleRate
 	}
 	if err = s.store.UpdateDevice(c.Request.Context(), common.FM, deviceName, fmDevice); err != nil {
@@ -104,12 +113,14 @@ func (s *SpecpipeServer) PutFmDevicesDevicename(c *gin.Context, deviceName strin
 
 	c.JSON(http.StatusOK, &FmDeviceResponse{
 		Device: FmDevice{
-			Freq:         fmDevice.Freq,
-			Latitude:     fmDevice.Latitude,
-			Longitude:    fmDevice.Longitude,
-			Name:         fmDevice.Name,
-			SampleRate:   fmDevice.SampleRate,
-			ResampleRate: fmDevice.ResampleRate,
+			Freq:            fmDevice.Freq,
+			Latitude:        fmDevice.Latitude,
+			Longitude:       fmDevice.Longitude,
+			Name:            fmDevice.Name,
+			RegisterTs:      fmDevice.RegisterTs,
+			SampleRate:      fmDevice.SampleRate,
+			ResampleRate:    fmDevice.ResampleRate,
+			SpecpipeVersion: fmDevice.SpecpipeVersion,
 		},
 	})
 }
@@ -128,11 +139,14 @@ func (s *SpecpipeServer) GetIqDevices(c *gin.Context) {
 			return
 		}
 		iqDevicesPresenter = append(iqDevicesPresenter, IqDevice{
-			Freq:       iqDevice.Freq,
-			Latitude:   iqDevice.Latitude,
-			Longitude:  iqDevice.Longitude,
-			Name:       iqDevice.Name,
-			SampleRate: iqDevice.SampleRate,
+			Forward:         iqDevice.Forward,
+			Freq:            iqDevice.Freq,
+			Latitude:        iqDevice.Latitude,
+			Longitude:       iqDevice.Longitude,
+			Name:            iqDevice.Name,
+			RegisterTs:      iqDevice.RegisterTs,
+			SampleRate:      iqDevice.SampleRate,
+			SpecpipeVersion: iqDevice.SpecpipeVersion,
 		})
 	}
 	c.JSON(http.StatusOK, &IqDevicesResponse{
@@ -157,11 +171,14 @@ func (s *SpecpipeServer) GetIqDevicesDevicename(c *gin.Context, deviceName strin
 	}
 	c.JSON(http.StatusOK, &IqDeviceResponse{
 		Device: IqDevice{
-			Freq:       iqDevice.Freq,
-			Latitude:   iqDevice.Latitude,
-			Longitude:  iqDevice.Longitude,
-			Name:       iqDevice.Name,
-			SampleRate: iqDevice.SampleRate,
+			Forward:         iqDevice.Forward,
+			Freq:            iqDevice.Freq,
+			Latitude:        iqDevice.Latitude,
+			Longitude:       iqDevice.Longitude,
+			Name:            iqDevice.Name,
+			RegisterTs:      iqDevice.RegisterTs,
+			SampleRate:      iqDevice.SampleRate,
+			SpecpipeVersion: iqDevice.SpecpipeVersion,
 		},
 	})
 }
@@ -186,9 +203,13 @@ func (s *SpecpipeServer) PutIqDevicesDevicename(c *gin.Context, deviceName strin
 		errorHandler(c, fmt.Errorf("casting iq device type error: %w", err), http.StatusInternalServerError)
 		return
 	}
+	if updateIqDeviceRequest.Freq == "" {
+		errorHandler(c, fmt.Errorf("parse request error: %w", edge.ErrEmptyFreq), http.StatusBadRequest)
+		return
+	}
 
 	iqDevice.Freq = updateIqDeviceRequest.Freq
-	if updateIqDeviceRequest.SampleRate != nil {
+	if updateIqDeviceRequest.SampleRate != nil && *updateIqDeviceRequest.SampleRate != "" {
 		iqDevice.SampleRate = *updateIqDeviceRequest.SampleRate
 	}
 	if err = s.store.UpdateDevice(c.Request.Context(), common.IQ, deviceName, iqDevice); err != nil {
@@ -198,11 +219,14 @@ func (s *SpecpipeServer) PutIqDevicesDevicename(c *gin.Context, deviceName strin
 
 	c.JSON(http.StatusOK, &IqDeviceResponse{
 		Device: IqDevice{
-			Freq:       iqDevice.Freq,
-			Latitude:   iqDevice.Latitude,
-			Longitude:  iqDevice.Longitude,
-			Name:       iqDevice.Name,
-			SampleRate: iqDevice.SampleRate,
+			Forward:         iqDevice.Forward,
+			Freq:            iqDevice.Freq,
+			Latitude:        iqDevice.Latitude,
+			Longitude:       iqDevice.Longitude,
+			Name:            iqDevice.Name,
+			RegisterTs:      iqDevice.RegisterTs,
+			SampleRate:      iqDevice.SampleRate,
+			SpecpipeVersion: iqDevice.SpecpipeVersion,
 		},
 	})
 }
