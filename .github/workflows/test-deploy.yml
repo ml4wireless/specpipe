@@ -2,7 +2,7 @@ name: Test deployment
 
 defaults:
   run:
-    working-directory: ./docs-website
+    working-directory: docs-website
 
 on:
   pull_request:
