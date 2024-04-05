@@ -18,6 +18,9 @@ jobs:
     defaults:
       run:
         working-directory: ./docs-website
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
