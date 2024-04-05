@@ -9,10 +9,11 @@ The following is the detailed data and control flow of SpecPipe.
 ![System Architecture](/img/specpipe-architecture.png)
 
 ### NATS
+
 NATS (Neural Autonomic Transport System) is a lightweight and high-performance messaging system designed for distributed systems, offering simplicity, reliability, and scalability for cloud-native applications.
 
 NATS is the backbone of our project. We couple NATS with Jetsream Jetstream to include additional functionality such as message persistence, replication, and delivery guarantees. NATS Jetstream is used in SpecPipe for:
-* Sending radio signal data (either raw IQ data, or demodulated data) from an Edge Node to an Application (see definitions below).
+* Sending radio signal data (either IQ data, or demodulated data) from an Edge Node to an Application (see definitions below).
 * Sending configuration and health commands from Applications to Edge nodes to change the configuration of the edge nodes as well as receive health check from the edge nodes.
 
 To accomplish this goal, we use the following NATS JetStream subjects [SpecPipe Subjects](./setup/sever-edge-setup#nats-jetstream-subjects)
