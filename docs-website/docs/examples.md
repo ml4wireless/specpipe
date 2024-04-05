@@ -15,4 +15,4 @@ sidebar_position: 3
 [This example](https://github.com/ml4wireless/specpipe/tree/main/_examples/speech2text) demonstrates converting speech received via FM to text.
 
 ### 4. Audio Data Mocking & Prometheus Exporter
-[This example](https://github.com/ml4wireless/specpipe/tree/main/_examples/mock_fm) streams the content of mock_audio.wav file (sampled at 32 KHz) to NATS JetStream circularly to simulate continuous audio collection. To monitor this data, this example further runs the prometious exporter.
+[This example](https://github.com/ml4wireless/specpipe/tree/main/_examples/mock_fm) streams the content of mock_audio.wav file (sampled at 32 KHz) to NATS JetStream circularly to simulate continuous audio collection. To monitor this data, this example further runs the Prometheus exporter.
