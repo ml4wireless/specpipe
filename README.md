@@ -1,4 +1,4 @@
-# SpecPipe - Distributed Data Pipeline for Spectrum
+# SpecPipe - Scalable Data Pipeline for Spectrum
 In today's interconnected world, radio spectrum signals surround us, yet there exist noticeable limitations in the data systems created to access, monitor, perform AI experiments, and contribute to this analog data.
 
 To democratize the access and usage of spectrum data, we have built SpecPipe, a modern scalable data pipeline for spectrum. This platform’s core values of accessibility, extensibility and scalability ensure that individual users can start to work with radio data with inexpensive hardware, minimal configuration, and a smooth onboarding process.
