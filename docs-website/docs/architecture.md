@@ -3,11 +3,8 @@ sidebar_label: 'Architecture'
 sidebar_position: 1000
 title: Architecture
 ---
-## High Level Design
 
-![SpecPipe overview](/img/specpipe-overview.png)
-
-## Architecture
+The following is the detailed data and control flow of SpecPipe.
 
 ![System Architecture](/img/specpipe-architecture.png)
 
