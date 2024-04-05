@@ -26,7 +26,7 @@ Key Features:
 - Intuitive - user-friendly CLI with robust configuration options via file, CLI args, or environment variables.
 - Lightweight - small binaries with low memory footprint.
 
-The following is an overview of the system (reference: @minghsu0107).
+The following is an overview of the system (reference: [@minghsu0107](https://github.com/minghsu0107)).
 
 <img width="795" alt="image" src="https://github.com/ml4wireless/specpipe/assets/50090692/b95311ec-d323-495b-a22b-775c94d34138">
 
