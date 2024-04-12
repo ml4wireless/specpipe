@@ -1,0 +1,26 @@
+name: Test deployment to Github Pages
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./docs-website
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+      - name: Test build website
+        run: yarn build
