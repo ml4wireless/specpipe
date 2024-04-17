@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def loadData(data):
+def load_data(data):
     # Read uint8 data and convert to double
     y = np.frombuffer(data, dtype='uint8')
 
@@ -81,7 +81,7 @@ async def main():
             data.extend(msg.data)
         print("total data size of 3 messages (bytes): ", len(data))
 
-        y = loadData(data)
+        y = load_data(data)
         plot_FFT_IQ(y, 0, len(y), 2.5, 99.7)
     except Exception as e:
         print(e)
