@@ -1,8 +1,9 @@
 import os
 import asyncio
 import nats
-import subprocess
+from nats.js import api
 from nats.aio.errors import ErrNoServers
+import subprocess
 import tempfile
 import pickle
 import re
@@ -34,7 +35,8 @@ async def run():
             process_iq_data(data[i:i+chunk_size])
 
     # Subscribe to the subject
-    sub = await js.pull_subscribe(subject)
+    sub = await js.pull_subscribe(subject, None,
+                                  config=api.ConsumerConfig(api.DeliverPolicy.NEW, inactive_threshold=30))
 
     try:
         while True:
