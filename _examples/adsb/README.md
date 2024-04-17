@@ -21,6 +21,7 @@ A client `main.py` has been created that fetches this Raw IQ Data from Jetstream
 
 ### 1) Starting Mock Data Streamer (Terminal Window 1)
 ```
+cd mock_iq/
 NATS_URL="nats://mytoken@127.0.0.1:4222"
 DEVICE="dev1"
 go run main.go exampledata.bin
@@ -32,9 +33,6 @@ We pass `exampledata.bin` to `main.go` so that's the data it plays on a loop
 ### 2) Processing Raw IQ to produce decoded ADSB Signals (Terminal Window 2)
 
 ```
-pip install requirements.txt
-NATS_URL="nats://127.0.0.1:4222"
-DEVICE="dev1"
-TOKEN="mytoken"
-python3 main.py
+docker build -t specpipe-adsb-demo .
+docker run -e NATS_URL="nats://127.0.0.1:4222" -e DEVICE="dev1" -e TOKEN="mytoken" --net=host -e PYTHONUNBUFFERED=1 --rm specpipe-adsb-demo
 ```
