@@ -55,7 +55,7 @@ func CaptureIQ(ctx context.Context, config *IqConfig, publisher message.Publishe
 				goto CLEANUP
 			}
 			n += bytesRead
-			if n < 16384 {
+			if n < 262144 {
 				time.Sleep(10 * time.Millisecond)
 			}
 			select {
