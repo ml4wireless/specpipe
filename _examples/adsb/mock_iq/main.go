@@ -30,6 +30,8 @@ func main() {
 	}
 	iqDataFilePath := os.Args[1]
 
+	chunk_size := 16 * 16384
+
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 
@@ -76,7 +78,7 @@ func main() {
 	defer f.Close()
 
 	fmt.Printf("streaming raw IQ data to NATS subject %s\n", natsSubject)
-	chunk := make([]byte, 2*8192)
+	chunk := make([]byte, chunk_size)
 	for {
 		n, err := f.Read(chunk)
 		if err != nil {
@@ -88,7 +90,7 @@ func main() {
 			return
 		}
 
-		for n < 16384 {
+		for n < chunk_size {
 			bytesRead, err := f.Read(chunk[n:])
 			if err != nil {
 				if err == io.EOF {
@@ -99,7 +101,7 @@ func main() {
 				return
 			}
 			n += bytesRead
-			if n < 16384 {
+			if n < chunk_size {
 				time.Sleep(10 * time.Millisecond)
 			}
 			select {
@@ -112,7 +114,7 @@ func main() {
 			}
 		}
 
-		payload := make([]byte, 2*8192)
+		payload := make([]byte, chunk_size)
 		copy(payload, chunk)
 		msg := message.NewMessage(watermill.NewShortUUID(), payload)
 		msg.Metadata.Set("ts", strconv.FormatInt(time.Now().UTC().Unix(), 10))

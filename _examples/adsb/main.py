@@ -28,9 +28,12 @@ async def run():
         return
 
     async def message_handler(msg):
+        chunk_size = 4 * 8192;
         data = msg.data
-        process_iq_data(data)
+        for i in range(0, len(data), chunk_size):
+            process_iq_data(data[i:i+chunk_size])
         
+    # Subscribe to the subject
     # Subscribe to the subject
     sub = await js.pull_subscribe(subject)
 
@@ -49,6 +52,7 @@ def process_iq_data(data):
 
     temp_file = tempfile.NamedTemporaryFile(delete=False, mode='wb')
     pickle.dump(data, temp_file)
+    #print(data)
     temp_file.close()
 
     temp_file_path = temp_file.name
@@ -58,8 +62,6 @@ def process_iq_data(data):
     try:
         result = subprocess.run(full_command, check=True, text=True, capture_output=True)
         parse_adsb_message_reports(result.stdout)
-        # if result.stdout:
-        #     print(result.stdout)
     except subprocess.CalledProcessError as e:
         print("An error occurred while executing the command.")
         print("Error message:", e.stderr)
@@ -83,17 +85,17 @@ def parse_adsb_message_reports(data):
             r'(Identification :\s+|Ident:\s+)(.*$)', data, re.M | re.I)
         
         if searchICAO and searchIdent:
-            valICAO = formText(searchICAO.group(2))
-            valIdent = formText(searchIdent.group(2)).strip()
-            logmsg(f"valICAO:{valICAO} valIdent:{valIdent}")
+            valICAO = form_text(searchICAO.group(2))
+            valIdent = form_text(searchIdent.group(2)).strip()
+            log_msg(f"valICAO:{valICAO} valIdent:{valIdent}")
 
         if searchFeet and searchICAO and searchLatitude and searchLongitude:
             # Found a valid combination
-            valICAO = formText(searchICAO.group(2))
-            valFeet = formNumber(searchFeet.group(2))
-            valLatitude = formNumber(searchLatitude.group(2))
-            valLongitude = formNumber(searchLongitude.group(2))
-            logmsg(
+            valICAO = form_text(searchICAO.group(2))
+            valFeet = form_number(searchFeet.group(2))
+            valLatitude = form_number(searchLatitude.group(2))
+            valLongitude = form_number(searchLongitude.group(2))
+            log_msg(
                 f"ICAO:{valICAO} Feet:{valFeet} Latitude:{valLatitude} Longitude:{valLongitude}")
 
 
