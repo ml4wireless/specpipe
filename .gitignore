@@ -1,2 +1,9 @@
 # specpipe-related executables
 sp-*
+
+# python artifacts
+venv
+__pycache__
+
+# editor artifacts
+*.swp
