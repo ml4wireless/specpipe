@@ -59,13 +59,13 @@ We need to set the appropriate configuration and library paths for the system wh
 For Mac M2, an example command is:
 
 ```bash
-cmake -DCMAKE_HOST_SYSTEM_PROCESSOR:STRING=arm64 -DLIBUSB_LIBRARIES=/opt/homebrew/Cellar/libusb/1.0.26/include/libusb-1.0 -DLIBUSB_LIBRARY=/opt/homebrew/lib/libusb-1.0.dylib ../
+cmake -DCMAKE_HOST_SYSTEM_PROCESSOR:STRING=arm64 -DLIBUSB_INCLUDE_DIR=/opt/homebrew/Cellar/libusb/1.0.26/include/libusb-1.0 -DLIBUSB_LIBRARIES=/opt/homebrew/lib/libusb-1.0.dylib ../
 sudo make && sudo make install
 ```
 
 For Mac M1, an example command is the following. Note that the path to the libusb-1.0 is different for the machines.
 ```bash
-cmake -DCMAKE_HOST_SYSTEM_PROCESSOR:STRING=arm64 -DLIBUSB_LIBRARIES=/usr/local/Cellar/libusb/1.0.26/include/libusb-1.0 -DLIBUSB_LIBRARY=/usr/local/lib/libusb-1.0.dylib ../
+cmake -DCMAKE_HOST_SYSTEM_PROCESSOR:STRING=arm64 -DLIBUSB_INCLUDE_DIR=/usr/local/Cellar/libusb/1.0.26/include/libusb-1.0 -DLIBUSB_LIBRARIES=/usr/local/lib/libusb-1.0.dylib ../
 sudo make && sudo make install
 ```
 
