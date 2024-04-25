@@ -14,16 +14,16 @@ project README for information on how to set this up, or use the mock_fm
 example to stream sample FM data without a physical device.
 
 #### Setup
-`python3.11 -m venv venv`
-`source venv/bin/activate`
-`pip install -r requirements.txt`
+- `python3 -m venv venv`
+- `source venv/bin/activate`
+- `pip3 install -r requirements.txt`
 
 ### Run Demo
 
 #### Terminal 1
-`python3 main.py`
-or
-`uvicorn main:app --reload`
+`python3 main.py` or `uvicorn main:app --reload`
 
 #### Terminal 2
-`cd frontend && npm install && npm start`
+- `cd frontend`
+- `npm install`
+- `npm start`
