@@ -59,7 +59,7 @@ def create_wav_header(sample_rate, bits_per_sample, channels, num_samples):
 
 def prepend_wav_header(
     audio_data: bytes,
-    sample_rate: int = 64000,
+    sample_rate: int = 32000,
     bits_per_sample: int = 16,
     channels: int = 1,
 ):
@@ -84,7 +84,7 @@ async def async_speech_to_text(audio_data: bytes, sample_rate: int):
 
 @app.websocket("/ws/fm_speech/{device_id}/{sample_rate}")
 async def ws_fm_speech(
-    websocket: WebSocket, device_id: str = "dev0-mock", sample_rate: int = 64000
+    websocket: WebSocket, device_id: str = "dev0-mock", sample_rate: int = 32000
 ):
     """Websocket endpoint that listens to audio data from a device and streams transcribed text"""
     await websocket.accept()
@@ -98,13 +98,11 @@ async def ws_fm_speech(
 
     async def message_handler(msg):
         audio_buffer.extend(msg.data)
-        if len(audio_buffer) >= sample_rate * CHUNK_SIZE_SECONDS:
+        chunk_size_bytes = sample_rate * 2 * CHUNK_SIZE_SECONDS  # two bytes per sample
+        if len(audio_buffer) >= chunk_size_bytes:
             try:
                 chunk_to_process = bytes(
-                    [
-                        audio_buffer.popleft()
-                        for _ in range(sample_rate * CHUNK_SIZE_SECONDS)
-                    ]
+                    [audio_buffer.popleft() for _ in range(chunk_size_bytes)]
                 )
                 transcribed_text = await async_speech_to_text(
                     chunk_to_process, sample_rate
@@ -122,7 +120,10 @@ async def ws_fm_speech(
         while not error_event.is_set():
             await asyncio.sleep(1)
     except Exception as e:
-        print(f"An error occurred in main loop: {e}")
+        print(f"An error occurred in main loop: {str(e)}")
+    except BaseException as e:
+        # Keyboard interrupt or system exit
+        pass
 
     await sub.unsubscribe()
     await nc.close()

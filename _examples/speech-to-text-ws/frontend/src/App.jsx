@@ -6,7 +6,7 @@ const App = () => {
 
   useEffect(() => {
     // Initialize WebSocket connection
-    const ws = new WebSocket('ws://0.0.0.0:8000/ws/fm_speech/dev0-mock/64000');
+    const ws = new WebSocket('ws://0.0.0.0:8000/ws/fm_speech/dev0-mock/32000');
     
     // Event listener for receiving messages
     ws.onmessage = (event) => {
