@@ -3,7 +3,7 @@ import asyncio
 import websockets
 
 DEVICE_ID = "dev0-mock"
-SAMPLE_RATE = 64000
+SAMPLE_RATE = 32000
 
 WS_URL = f"ws://0.0.0.0:8000/ws/fm_speech/{DEVICE_ID}/{SAMPLE_RATE}"
 WS_TEST_URL = f"ws://0.0.0.0:8000/ws/text_random"
