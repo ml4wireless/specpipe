@@ -53,19 +53,13 @@ sudo make && sudo make install
 ```
 #### For Mac Users using Apple silicon
 We need to set the appropriate configuration and library paths for the system when calling `cmake`. Specifically, we'll need to set the options:
-1) `DLIBUSB_INCLUDE_DIR` to the path to the folder that contains `libusb.h` found above
-2) `DLIBUSB_LIBRARY` to the path to the `.dylib` file found above
+1) `LIBUSB_INCLUDE_DIR` to the path to the folder that contains `libusb.h` found above
+2) `LIBUSB_LIBRARIES` to the path to the `.so` or `.dylib` file found above
 
 For Mac M2, an example command is:
 
 ```bash
 cmake -DCMAKE_HOST_SYSTEM_PROCESSOR:STRING=arm64 -DLIBUSB_INCLUDE_DIR=/opt/homebrew/Cellar/libusb/1.0.26/include/libusb-1.0 -DLIBUSB_LIBRARIES=/opt/homebrew/lib/libusb-1.0.dylib ../
-sudo make && sudo make install
-```
-
-For Mac M1, an example command is the following. Note that the path to the libusb-1.0 is different for the machines.
-```bash
-cmake -DCMAKE_HOST_SYSTEM_PROCESSOR:STRING=arm64 -DLIBUSB_INCLUDE_DIR=/usr/local/Cellar/libusb/1.0.26/include/libusb-1.0 -DLIBUSB_LIBRARIES=/usr/local/lib/libusb-1.0.dylib ../
 sudo make && sudo make install
 ```
 
@@ -86,7 +80,8 @@ make docker VERSION=v0.2.1
 Start a `rtl_rpcd` daemon on the host machine, which allows remote access of SDR hardware at `127.0.0.1:40000` via `librtlsdr` command-line tools.
 
 ```bash
-RTLSDR_RPC_SERV_ADDR=127.0.0.1 RTLSDR_RPC_SERV_PORT=40000 rtl_rpcd >> rtlrpcd.log 2>&1 &
+cd src/
+RTLSDR_RPC_SERV_ADDR=127.0.0.1 RTLSDR_RPC_SERV_PORT=40000 ./rtl_rpcd >> rtlrpcd.log 2>&1 &
 ```
 
 ### 5. Setting up SpecPipe server
