@@ -18,3 +18,5 @@ We have accomplished this goal of improving access to spectrum data by building 
 
 For more details on the architecture of SpecPipe [click here](./architecture).
 
+For more context about SpecPipe, please read our [technical report](/specpipe-technical-report.pdf). Additionally, [Here](/specpipe-project-brief.pdf) is a one-page projet brief that summarizes our work.
+
