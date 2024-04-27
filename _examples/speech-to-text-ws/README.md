@@ -27,3 +27,6 @@ example to stream sample FM data without a physical device.
 - `cd frontend`
 - `npm install`
 - `npm start`
+
+#### Listen via CLI
+- `python3 listener.py dev0-mock`
