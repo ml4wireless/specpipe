@@ -118,7 +118,7 @@ func main() {
 			fmt.Println(err)
 			return
 		}
-		time.Sleep(20 * time.Millisecond)
+		time.Sleep(230 * time.Millisecond)
 
 		select {
 		case <-sig:
